@@ -1,8 +1,25 @@
 import { useState } from "react";
-import Cell from "./components/Cell";
+import Cell, { MiddleCell } from "./components/Cell";
+import styled from "styled-components";
+import BootstrapContainer from "./components/BootstrapContainer";
+import GlobalStyles from "./GlobalStyles";
 
 function App() {
+  const [numCells, setNumCells] = useState(9);
   const [cells, setCells] = useState([
+    { selected: false, pitch: "C3", guessed: false },
+    { selected: false, pitch: "C4", guessed: false },
+    { selected: false, pitch: "C3", guessed: false },
+    { selected: false, pitch: "C4", guessed: false },
+    { selected: false, pitch: "C3", guessed: false },
+    { selected: false, pitch: "C4", guessed: false },
+    { selected: false, pitch: "C3", guessed: false },
+    { selected: false, pitch: "C4", guessed: false },
+
+    { selected: false, pitch: "C3", guessed: false },
+    { selected: false, pitch: "C4", guessed: false },
+    { selected: false, pitch: "C3", guessed: false },
+    { selected: false, pitch: "C4", guessed: false },
     { selected: false, pitch: "C3", guessed: false },
     { selected: false, pitch: "C4", guessed: false },
     { selected: false, pitch: "C3", guessed: false },
@@ -33,7 +50,7 @@ function App() {
     }
 
     return console.log(
-      `something wrong happened: num selected =${numSelectedCells}`
+      `something wrong happened: num selected = ${numSelectedCells}`
     );
   };
 
@@ -70,18 +87,65 @@ function App() {
     if (numGuessedCells === cells.length) return console.log("you win");
   };
 
+  const boardSize = Math.sqrt(numCells);
+  const boardMiddleId = boardSize % 2 === 0 ? null : Math.floor(numCells / 2);
+
+  const StyledBoard = styled.div`
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(${boardSize}, 1fr);
+    align-items: center;
+    grid-gap: 8px;
+  `;
+
   return (
     <>
-      {cells.map((cell, i) => (
-        <Cell
-          key={i}
-          cellId={i}
-          handleSelect={handleSelect}
-          selected={cell.selected}
-          pitch={cell.pitch}
-          guessed={cell.guessed}
-        />
-      ))}
+      <GlobalStyles />
+      <BootstrapContainer>
+        {boardMiddleId ? (
+          <StyledBoard>
+            {new Array(numCells)
+              .fill(0)
+              .map((_el, i) =>
+                i < 4 ? (
+                  <Cell
+                    key={i}
+                    cellId={i}
+                    handleSelect={handleSelect}
+                    selected={cells[i].selected}
+                    pitch={cells[i].pitch}
+                    guessed={cells[i].guessed}
+                  />
+                ) : i === boardMiddleId ? (
+                  <MiddleCell key={i} />
+                ) : (
+                  <Cell
+                    key={i}
+                    cellId={i - 1}
+                    handleSelect={handleSelect}
+                    selected={cells[i - 1].selected}
+                    pitch={cells[i - 1].pitch}
+                    guessed={cells[i - 1].guessed}
+                  />
+                )
+              )}
+          </StyledBoard>
+        ) : (
+          <StyledBoard>
+            {new Array(numCells).fill(0).map((_el, i) => (
+              <Cell
+                key={i}
+                cellId={i}
+                handleSelect={handleSelect}
+                selected={cells[i].selected}
+                pitch={cells[i].pitch}
+                guessed={cells[i].guessed}
+              />
+            ))}
+          </StyledBoard>
+        )}
+      </BootstrapContainer>
     </>
   );
 }
