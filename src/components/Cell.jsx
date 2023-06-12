@@ -4,10 +4,12 @@ import C3 from "../sounds/C3.mp3";
 import C4 from "../sounds/C4.mp3";
 
 const StyledCell = styled.div`
-  background-color: lightblue;
   aspect-ratio: 1/1;
-  border: ${(props) => (props.guessed ? `5px solid green` : `5px solid red`)};
+  border: ${({ guessed }) => (guessed ? `5px solid green` : `5px solid red`)};
+  background-color: ${({ guessed, selected }) =>
+    selected ? `lightcyan` : guessed ? `lightgreen` : `lightblue`};
   cursor: pointer;
+  color: light;
 `;
 
 export const MiddleCell = styled(StyledCell)`
@@ -25,13 +27,7 @@ const Cell = ({ cellId, handleSelect, selected, pitch, guessed }) => {
   };
 
   return (
-    <StyledCell
-      onClick={handleClick}
-      guessed={guessed}
-      style={
-        guessed ? { border: "5px solid green" } : { border: "5px solid red" }
-      }
-    >
+    <StyledCell onClick={handleClick} guessed={guessed} selected={selected}>
       {/* {`Cell ${cellId} with pitch ${pitch} selected = ${selected} guessed = ${guessed}`} */}
     </StyledCell>
   );

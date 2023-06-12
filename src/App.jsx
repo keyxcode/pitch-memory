@@ -4,6 +4,15 @@ import styled from "styled-components";
 import BootstrapContainer from "./components/BootstrapContainer";
 import GlobalStyles from "./GlobalStyles";
 
+const StyledBoard = styled.div`
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: ${({ boardSize }) => `repeat(${boardSize}, 1fr)`};
+  align-items: center;
+  grid-gap: 8px;
+`;
+
 function App() {
   const [numCells, setNumCells] = useState(9);
   const [cells, setCells] = useState([
@@ -16,15 +25,16 @@ function App() {
     { selected: false, pitch: "C3", guessed: false },
     { selected: false, pitch: "C4", guessed: false },
 
-    { selected: false, pitch: "C3", guessed: false },
-    { selected: false, pitch: "C4", guessed: false },
-    { selected: false, pitch: "C3", guessed: false },
-    { selected: false, pitch: "C4", guessed: false },
-    { selected: false, pitch: "C3", guessed: false },
-    { selected: false, pitch: "C4", guessed: false },
-    { selected: false, pitch: "C3", guessed: false },
-    { selected: false, pitch: "C4", guessed: false },
+    // { selected: false, pitch: "C3", guessed: false },
+    // { selected: false, pitch: "C4", guessed: false },
+    // { selected: false, pitch: "C3", guessed: false },
+    // { selected: false, pitch: "C4", guessed: false },
+    // { selected: false, pitch: "C3", guessed: false },
+    // { selected: false, pitch: "C4", guessed: false },
+    // { selected: false, pitch: "C3", guessed: false },
+    // { selected: false, pitch: "C4", guessed: false },
   ]);
+  const [message, setMessage] = useState("");
 
   const handleSelect = (id) => {
     if (cells[id].selected === true) return;
@@ -84,27 +94,29 @@ function App() {
     const numGuessedCells = cells.filter(
       (cell) => cell.guessed === true
     ).length;
-    if (numGuessedCells === cells.length) return console.log("you win");
+    if (numGuessedCells === cells.length) setMessage("you win");
+  };
+
+  const handleRestart = () => {
+    const newCells = cells.map((cell) => ({
+      ...cell,
+      selected: false,
+      guessed: false,
+    }));
+    setCells(newCells);
+
+    setMessage("");
   };
 
   const boardSize = Math.sqrt(numCells);
   const boardMiddleId = boardSize % 2 === 0 ? null : Math.floor(numCells / 2);
-
-  const StyledBoard = styled.div`
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(${boardSize}, 1fr);
-    align-items: center;
-    grid-gap: 8px;
-  `;
 
   return (
     <>
       <GlobalStyles />
       <BootstrapContainer>
         {boardMiddleId ? (
-          <StyledBoard>
+          <StyledBoard boardSize={boardSize}>
             {new Array(numCells)
               .fill(0)
               .map((_el, i) =>
@@ -145,6 +157,8 @@ function App() {
             ))}
           </StyledBoard>
         )}
+        <div>{message && message}</div>
+        <button onClick={handleRestart}>Restart</button>
       </BootstrapContainer>
     </>
   );
