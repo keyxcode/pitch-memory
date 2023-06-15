@@ -33,6 +33,7 @@ font-family: "Silkscreen", system-ui, -apple-system, BlinkMacSystemFont,
   justify-content: center;
   min-height: 100vh;
   width: 100%;
+  background-color: lightgoldenrodyellow;
 }
 `;
 

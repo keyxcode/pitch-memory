@@ -5,7 +5,7 @@ const StyledCell = styled.div`
   aspect-ratio: 1/1;
   border: ${({ guessed }) => (guessed ? `5px solid green` : `5px solid red`)};
   background-color: ${({ guessed, selected }) =>
-    selected ? `lightcyan` : guessed ? `lightgreen` : `lightblue`};
+    selected ? `lightcyan` : guessed ? `lightgreen` : `lightskyblue`};
   cursor: pointer;
   color: light;
 `;
@@ -28,8 +28,18 @@ const Cell = ({ cellId, handleSelect, selected, sound, guessed }) => {
 
   return (
     <StyledCell onClick={handleClick} guessed={guessed} selected={selected}>
-      {cellId} {String(sound).replace("/src/sounds/", "").replace(".mp3", "")}
-      {/* {`Cell ${cellId} with pitch ${sound} selected = ${selected} guessed = ${guessed}`} */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          fontSize: 24,
+        }}
+      >
+        {guessed &&
+          String(sound).replace("/src/sounds/", "").replace(".mp3", "")}
+      </div>
     </StyledCell>
   );
 };
