@@ -32,7 +32,7 @@ font-family: "Silkscreen", system-ui, -apple-system, BlinkMacSystemFont,
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
 }
 `;
 

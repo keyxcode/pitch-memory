@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cell, { MiddleCell } from "./components/Cell";
 import styled from "styled-components";
 import BootstrapContainer from "./components/BootstrapContainer";
 import GlobalStyles from "./GlobalStyles";
+import soundsData from "./sounds/soundsData";
 
 const StyledBoard = styled.div`
   width: 100%;
@@ -15,15 +16,16 @@ const StyledBoard = styled.div`
 
 function App() {
   const [numCells, setNumCells] = useState(9);
+  const [pitchIds, setPitchIds] = useState([]);
   const [cells, setCells] = useState([
-    { selected: false, pitch: "C3", guessed: false },
-    { selected: false, pitch: "C4", guessed: false },
-    { selected: false, pitch: "C3", guessed: false },
-    { selected: false, pitch: "C4", guessed: false },
-    { selected: false, pitch: "C3", guessed: false },
-    { selected: false, pitch: "C4", guessed: false },
-    { selected: false, pitch: "C3", guessed: false },
-    { selected: false, pitch: "C4", guessed: false },
+    { selected: false, pitch: soundsData[0], guessed: false },
+    { selected: false, pitch: soundsData[1], guessed: false },
+    { selected: false, pitch: soundsData[0], guessed: false },
+    { selected: false, pitch: soundsData[1], guessed: false },
+    { selected: false, pitch: soundsData[0], guessed: false },
+    { selected: false, pitch: soundsData[1], guessed: false },
+    { selected: false, pitch: soundsData[0], guessed: false },
+    { selected: false, pitch: soundsData[1], guessed: false },
 
     // { selected: false, pitch: "C3", guessed: false },
     // { selected: false, pitch: "C4", guessed: false },
@@ -35,6 +37,22 @@ function App() {
     // { selected: false, pitch: "C4", guessed: false },
   ]);
   const [message, setMessage] = useState("");
+
+  const randomizePitchIds = () => {
+    // Figure out number of sound cells (9 -> 8, 16 -> 16, 24 -> 24)
+    const numSoundCells =
+      numCells % 2 === 0 ? numSoundCells : numSoundCells - 1;
+    console.log(numSoundCells);
+    // Select (numSoundCells / 2) random ids from soundData (4, 8, 12)
+    // Create a new array with the random ids duplicated x 2
+    // Randomize the element positions in this new array
+    // Map these ids to a new pitch array
+    // Map the pitch array to the cells pitches
+  };
+
+  useEffect(() => {
+    // randomizePitchIds();
+  }, [numCells]);
 
   const handleSelect = (id) => {
     if (cells[id].selected === true) return;

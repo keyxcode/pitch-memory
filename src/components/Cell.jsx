@@ -18,7 +18,7 @@ export const MiddleCell = styled(StyledCell)`
 `;
 
 const Cell = ({ cellId, handleSelect, selected, pitch, guessed }) => {
-  const [play] = useSound(pitch === "C3" ? C3 : C4);
+  const [play] = useSound(pitch);
 
   const handleClick = () => {
     if (guessed) return;
