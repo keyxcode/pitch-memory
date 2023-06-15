@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import Cell, { MiddleCell } from "./components/Cell";
 import styled from "styled-components";
 import BootstrapContainer from "./components/BootstrapContainer";
@@ -37,21 +37,31 @@ function App() {
   ]);
   const [message, setMessage] = useState("");
 
+  const boardSize = useMemo(() => Math.sqrt(numCells), [numCells]);
+  const boardMiddleId = useMemo(
+    () => (numCells % 2 === 0 ? null : Math.floor(numCells / 2)),
+    [numCells]
+  );
+  const numSoundCells = useMemo(
+    () => (numCells % 2 === 0 ? numCells : numCells - 1),
+    [numCells]
+  );
+
   const selectRandomElInArray = (arr) => {
     return arr[Math.floor(Math.random() * arr.length)];
   };
 
-  const selectNRandomElsInArray = (arr, n) => {
-    const randomEls = [];
+  const getRandomElements = useCallback((arr, n) => {
+    const randomElements = [];
 
-    while (randomEls.length < n) {
-      const id = selectRandomElInArray(arr);
-      if (randomEls.includes(id)) continue;
-      randomEls.push(id);
+    while (randomElements.length < n) {
+      const el = selectRandomElInArray(arr);
+      if (randomElements.includes(el)) continue;
+      randomElements.push(el);
     }
 
-    return randomEls;
-  };
+    return randomElements;
+  }, []);
 
   const shuffleArray = (arr) => {
     let currentIndex = arr.length,
@@ -73,61 +83,30 @@ function App() {
     return arr;
   };
 
-  const randomizeCellsPitch = () => {
-    // Figure out number of sound cells (9 -> 8, 16 -> 16, 24 -> 24)
-    const numSoundCells = numCells % 2 === 0 ? numCells : numCells - 1;
-
-    // Select (numSoundCells / 2) random ids from soundData (4, 8, 12)
-    const partialRandomSounds = selectNRandomElsInArray(
-      soundsData,
-      numSoundCells / 2
-    );
-
-    // Create a new array with the random ids duplicated x 2
-    const fullRandomSounds = [...partialRandomSounds, ...partialRandomSounds];
-
-    // Shuffle the element positions in this new array
+  const createRandomCells = useCallback(() => {
+    // This is to assure there's a pair to every sound
+    const halfRandomSounds = getRandomElements(soundsData, numSoundCells / 2);
+    const fullRandomSounds = [...halfRandomSounds, ...halfRandomSounds];
     const shuffledRandomSounds = shuffleArray(fullRandomSounds);
-    console.log(shuffledRandomSounds);
 
-    // Map these ids to a new pitch array
-    const newCells = cells.map((cell, id) => ({
-      ...cell,
-      sound: shuffledRandomSounds[id],
-    }));
+    const randomCells = Array(numSoundCells)
+      .fill({ selected: false, guessed: false })
+      .map((cell, id) => ({
+        ...cell,
+        sound: shuffledRandomSounds[id],
+      }));
 
-    return newCells;
-    // Map the pitch array to the cells pitches
-  };
+    console.log("created new cells", randomCells);
 
-  // useEffect(() => {
-  //   // Figure out number of sound cells (9 -> 8, 16 -> 16, 24 -> 24)
-  //   const numSoundCells = numCells % 2 === 0 ? numCells : numCells - 1;
+    return randomCells;
+  }, [numSoundCells, getRandomElements]);
 
-  //   // Select (numSoundCells / 2) random ids from soundData (4, 8, 12)
-  //   const partialRandomSounds = selectNRandomElsInArray(
-  //     soundsData,
-  //     numSoundCells / 2
-  //   );
+  useEffect(() => {
+    const newCells = createRandomCells();
+    setCells(newCells);
+  }, [createRandomCells]);
 
-  //   // Create a new array with the random ids duplicated x 2
-  //   const fullRandomSounds = [...partialRandomSounds, ...partialRandomSounds];
-
-  //   // Shuffle the element positions in this new array
-  //   const shuffledRandomSounds = shuffleArray(fullRandomSounds);
-  //   console.log(shuffledRandomSounds);
-
-  //   // Map these ids to a new pitch array
-  //   const newCells = cells.map((cell, id) => ({
-  //     ...cell,
-  //     sound: shuffledRandomSounds[id],
-  //   }));
-  //   setCells(newCells);
-  //   console.log("rerendered", newCells);
-  //   // Map the pitch array to the cells pitches
-  // }, [numCells]);
-
-  const handleSelect = (id) => {
+  const handleSelectCell = (id) => {
     if (cells[id].selected === true) return;
 
     const newCells = cells.map((cell, i) =>
@@ -148,10 +127,6 @@ function App() {
         return setAllCellsUnselected();
       }
     }
-
-    return console.log(
-      `something wrong happened: num selected = ${numSelectedCells}`
-    );
   };
 
   const guessesAreCorrect = (selectedCells) => {
@@ -188,20 +163,17 @@ function App() {
     if (numGuessedCells === numCells) setMessage("you win");
   };
 
-  const handleRestart = () => {
-    const randomizedPitchCells = randomizeCellsPitch();
-    const newCells = randomizedPitchCells.map((cell) => ({
-      ...cell,
-      selected: false,
-      guessed: false,
-    }));
-
+  const handleRestart = useCallback(() => {
+    const newCells = createRandomCells();
     setCells(newCells);
-    setMessage("");
-  };
 
-  const boardSize = Math.sqrt(numCells);
-  const boardMiddleId = boardSize % 2 === 0 ? null : Math.floor(numCells / 2);
+    setMessage("");
+  }, [createRandomCells]);
+
+  const handleChangeNumCells = (e) => {
+    console.log("changed board size to", e.target.value);
+    setNumCells(parseInt(e.target.value));
+  };
 
   return (
     <>
@@ -216,7 +188,7 @@ function App() {
                   <Cell
                     key={i}
                     cellId={i}
-                    handleSelect={handleSelect}
+                    handleSelect={handleSelectCell}
                     selected={cells[i].selected}
                     sound={cells[i].sound}
                     guessed={cells[i].guessed}
@@ -227,7 +199,7 @@ function App() {
                   <Cell
                     key={i}
                     cellId={i - 1}
-                    handleSelect={handleSelect}
+                    handleSelect={handleSelectCell}
                     selected={cells[i - 1].selected}
                     sound={cells[i - 1].sound}
                     guessed={cells[i - 1].guessed}
@@ -241,7 +213,7 @@ function App() {
               <Cell
                 key={i}
                 cellId={i}
-                handleSelect={handleSelect}
+                handleSelect={handleSelectCell}
                 selected={cells[i].selected}
                 sound={cells[i].sound}
                 guessed={cells[i].guessed}
@@ -251,6 +223,10 @@ function App() {
         )}
         <div>{message && message}</div>
         <button onClick={handleRestart}>Restart</button>
+        <select onChange={handleChangeNumCells} value={numCells}>
+          <option value={9}>9 x 9</option>
+          <option value={16}>16 x 16</option>
+        </select>
       </BootstrapContainer>
     </>
   );
