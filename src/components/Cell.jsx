@@ -1,7 +1,5 @@
 import styled from "styled-components";
 import useSound from "use-sound";
-import C3 from "../sounds/C3.mp3";
-import C4 from "../sounds/C4.mp3";
 
 const StyledCell = styled.div`
   aspect-ratio: 1/1;
@@ -17,8 +15,8 @@ export const MiddleCell = styled(StyledCell)`
   cursor: default;
 `;
 
-const Cell = ({ cellId, handleSelect, selected, pitch, guessed }) => {
-  const [play] = useSound(pitch);
+const Cell = ({ cellId, handleSelect, selected, sound, guessed }) => {
+  const [play] = useSound(sound);
 
   const handleClick = () => {
     if (guessed) return;

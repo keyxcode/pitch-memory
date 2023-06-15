@@ -16,43 +16,116 @@ const StyledBoard = styled.div`
 
 function App() {
   const [numCells, setNumCells] = useState(9);
-  const [pitchIds, setPitchIds] = useState([]);
   const [cells, setCells] = useState([
-    { selected: false, pitch: soundsData[0], guessed: false },
-    { selected: false, pitch: soundsData[1], guessed: false },
-    { selected: false, pitch: soundsData[0], guessed: false },
-    { selected: false, pitch: soundsData[1], guessed: false },
-    { selected: false, pitch: soundsData[0], guessed: false },
-    { selected: false, pitch: soundsData[1], guessed: false },
-    { selected: false, pitch: soundsData[0], guessed: false },
-    { selected: false, pitch: soundsData[1], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
 
-    // { selected: false, pitch: "C3", guessed: false },
-    // { selected: false, pitch: "C4", guessed: false },
-    // { selected: false, pitch: "C3", guessed: false },
-    // { selected: false, pitch: "C4", guessed: false },
-    // { selected: false, pitch: "C3", guessed: false },
-    // { selected: false, pitch: "C4", guessed: false },
-    // { selected: false, pitch: "C3", guessed: false },
-    // { selected: false, pitch: "C4", guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
+    { selected: false, sound: soundsData[0], guessed: false },
   ]);
   const [message, setMessage] = useState("");
 
-  const randomizePitchIds = () => {
+  const selectRandomElInArray = (arr) => {
+    return arr[Math.floor(Math.random() * arr.length)];
+  };
+
+  const selectNRandomElsInArray = (arr, n) => {
+    const randomEls = [];
+
+    while (randomEls.length < n) {
+      const id = selectRandomElInArray(arr);
+      if (randomEls.includes(id)) continue;
+      randomEls.push(id);
+    }
+
+    return randomEls;
+  };
+
+  const shuffleArray = (arr) => {
+    let currentIndex = arr.length,
+      randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      [arr[currentIndex], arr[randomIndex]] = [
+        arr[randomIndex],
+        arr[currentIndex],
+      ];
+    }
+
+    return arr;
+  };
+
+  const randomizeCellsPitch = () => {
     // Figure out number of sound cells (9 -> 8, 16 -> 16, 24 -> 24)
-    const numSoundCells =
-      numCells % 2 === 0 ? numSoundCells : numSoundCells - 1;
-    console.log(numSoundCells);
+    const numSoundCells = numCells % 2 === 0 ? numCells : numCells - 1;
+
     // Select (numSoundCells / 2) random ids from soundData (4, 8, 12)
+    const partialRandomSounds = selectNRandomElsInArray(
+      soundsData,
+      numSoundCells / 2
+    );
+
     // Create a new array with the random ids duplicated x 2
-    // Randomize the element positions in this new array
+    const fullRandomSounds = [...partialRandomSounds, ...partialRandomSounds];
+
+    // Shuffle the element positions in this new array
+    const shuffledRandomSounds = shuffleArray(fullRandomSounds);
+    console.log(shuffledRandomSounds);
+
     // Map these ids to a new pitch array
+    const newCells = cells.map((cell, id) => ({
+      ...cell,
+      sound: shuffledRandomSounds[id],
+    }));
+
+    return newCells;
     // Map the pitch array to the cells pitches
   };
 
-  useEffect(() => {
-    // randomizePitchIds();
-  }, [numCells]);
+  // useEffect(() => {
+  //   // Figure out number of sound cells (9 -> 8, 16 -> 16, 24 -> 24)
+  //   const numSoundCells = numCells % 2 === 0 ? numCells : numCells - 1;
+
+  //   // Select (numSoundCells / 2) random ids from soundData (4, 8, 12)
+  //   const partialRandomSounds = selectNRandomElsInArray(
+  //     soundsData,
+  //     numSoundCells / 2
+  //   );
+
+  //   // Create a new array with the random ids duplicated x 2
+  //   const fullRandomSounds = [...partialRandomSounds, ...partialRandomSounds];
+
+  //   // Shuffle the element positions in this new array
+  //   const shuffledRandomSounds = shuffleArray(fullRandomSounds);
+  //   console.log(shuffledRandomSounds);
+
+  //   // Map these ids to a new pitch array
+  //   const newCells = cells.map((cell, id) => ({
+  //     ...cell,
+  //     sound: shuffledRandomSounds[id],
+  //   }));
+  //   setCells(newCells);
+  //   console.log("rerendered", newCells);
+  //   // Map the pitch array to the cells pitches
+  // }, [numCells]);
 
   const handleSelect = (id) => {
     if (cells[id].selected === true) return;
@@ -64,7 +137,6 @@ function App() {
 
     const selectedCells = newCells.filter((cell) => cell.selected === true);
     const numSelectedCells = selectedCells.length;
-    console.log("numSelectedCells", numSelectedCells);
 
     if (numSelectedCells === 1) return;
 
@@ -83,7 +155,8 @@ function App() {
   };
 
   const guessesAreCorrect = (selectedCells) => {
-    if (selectedCells[0].pitch === selectedCells[1].pitch) return true;
+    console.log(selectedCells);
+    if (selectedCells[0].sound === selectedCells[1].sound) return true;
     return false;
   };
 
@@ -112,17 +185,18 @@ function App() {
     const numGuessedCells = cells.filter(
       (cell) => cell.guessed === true
     ).length;
-    if (numGuessedCells === cells.length) setMessage("you win");
+    if (numGuessedCells === numCells) setMessage("you win");
   };
 
   const handleRestart = () => {
-    const newCells = cells.map((cell) => ({
+    const randomizedPitchCells = randomizeCellsPitch();
+    const newCells = randomizedPitchCells.map((cell) => ({
       ...cell,
       selected: false,
       guessed: false,
     }));
-    setCells(newCells);
 
+    setCells(newCells);
     setMessage("");
   };
 
@@ -144,7 +218,7 @@ function App() {
                     cellId={i}
                     handleSelect={handleSelect}
                     selected={cells[i].selected}
-                    pitch={cells[i].pitch}
+                    sound={cells[i].sound}
                     guessed={cells[i].guessed}
                   />
                 ) : i === boardMiddleId ? (
@@ -155,21 +229,21 @@ function App() {
                     cellId={i - 1}
                     handleSelect={handleSelect}
                     selected={cells[i - 1].selected}
-                    pitch={cells[i - 1].pitch}
+                    sound={cells[i - 1].sound}
                     guessed={cells[i - 1].guessed}
                   />
                 )
               )}
           </StyledBoard>
         ) : (
-          <StyledBoard>
+          <StyledBoard boardSize={boardSize}>
             {new Array(numCells).fill(0).map((_el, i) => (
               <Cell
                 key={i}
                 cellId={i}
                 handleSelect={handleSelect}
                 selected={cells[i].selected}
-                pitch={cells[i].pitch}
+                sound={cells[i].sound}
                 guessed={cells[i].guessed}
               />
             ))}
