@@ -24,11 +24,12 @@ const Cell = ({ cellId, handleSelect, selected, sound, guessed }) => {
     play();
   };
 
-  console.log("rendering cell");
+  // console.log("rendering cell");
 
   return (
     <StyledCell onClick={handleClick} guessed={guessed} selected={selected}>
-      {`Cell ${cellId} with pitch ${sound} selected = ${selected} guessed = ${guessed}`}
+      {cellId} {String(sound).replace("/src/sounds/", "").replace(".mp3", "")}
+      {/* {`Cell ${cellId} with pitch ${sound} selected = ${selected} guessed = ${guessed}`} */}
     </StyledCell>
   );
 };
