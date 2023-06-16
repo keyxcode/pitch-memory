@@ -147,7 +147,8 @@ const App = () => {
     const numGuessedCells = cells.filter(
       (cell) => cell.guessed === true
     ).length;
-    if (numGuessedCells === numCells) setMessage("you win");
+
+    if (numGuessedCells === numSoundCells) setMessage("you win");
   };
 
   const handleRestart = () => {

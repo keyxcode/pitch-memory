@@ -25,6 +25,10 @@ font-family: "Silkscreen", system-ui, -apple-system, BlinkMacSystemFont,
 --xxl: 48px;
 }
 
+body {
+  margin: 0
+}
+
 #root {
   display: flex;
   margin: 0;

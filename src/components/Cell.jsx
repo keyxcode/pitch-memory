@@ -8,6 +8,7 @@ const StyledCell = styled.div`
     selected ? `lightcyan` : guessed ? `lightgreen` : `lightskyblue`};
   cursor: pointer;
   color: light;
+  overflow: hidden;
 `;
 
 export const MiddleCell = styled(StyledCell)`
@@ -16,7 +17,7 @@ export const MiddleCell = styled(StyledCell)`
 `;
 
 const Cell = ({ cellId, handleSelect, selected, sound, guessed }) => {
-  const [play] = useSound(sound);
+  const [play] = useSound(sound.path);
 
   const handleClick = () => {
     if (guessed) return;
@@ -34,11 +35,9 @@ const Cell = ({ cellId, handleSelect, selected, sound, guessed }) => {
           justifyContent: "center",
           alignItems: "center",
           height: "100%",
-          fontSize: 24,
         }}
       >
-        {guessed &&
-          String(sound).replace("/src/sounds/", "").replace(".mp3", "")}
+        {guessed && sound.name}
       </div>
     </StyledCell>
   );
