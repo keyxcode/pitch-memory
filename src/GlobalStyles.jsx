@@ -22,19 +22,10 @@ font-family: "Silkscreen", system-ui, -apple-system, BlinkMacSystemFont,
 }
 
 body {
-  margin: 0
-}
-
-#root {
-  display: flex;
   margin: 0;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  width: 100%;
   background-color: var(--lighter);
 }
+
 `;
 
 export default GlobalStyles;

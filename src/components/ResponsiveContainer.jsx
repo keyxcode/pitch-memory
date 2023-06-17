@@ -8,6 +8,7 @@ const ResponsiveContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
+  flex-grow: 1;
 
   @media (min-width: 0px) {
     width: 100%;

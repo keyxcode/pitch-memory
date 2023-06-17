@@ -73,7 +73,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  height: 100%;
+  min-height: 100vh;
   width: 100%;
 `;
 
@@ -115,7 +115,10 @@ const StyledButtonGroup = styled.div`
   gap: var(--s);
   align-items: end;
   flex-wrap: wrap;
-  max-height: 50px;
+  height: 50px;
+  border: 2px solid var(--dark);
+  border-radius: var(--s);
+  padding: var(--s);
 `;
 
 //=================================================================================
@@ -192,7 +195,7 @@ const App = () => {
       (cell) => cell.guessed === true
     ).length;
 
-    if (numGuessedCells === numSoundCells) setMessage("you win!");
+    if (numGuessedCells === numSoundCells) setMessage("you win! 🥳");
   };
 
   const handleRestart = () => {

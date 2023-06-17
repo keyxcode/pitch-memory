@@ -10,6 +10,10 @@ const StyledCell = styled.div`
   color: var(--darker);
   overflow: hidden;
   border-radius: var(--s);
+  transform: ${({ selected }) => (selected ? `rotateY(180deg)` : `rotateY(0)`)};
+  transition: all ease-in 0.5s;
+  font-weight: bold;
+  font-size: var(--l);
 `;
 
 export const MiddleCell = styled(StyledCell)`
