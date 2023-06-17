@@ -124,6 +124,7 @@ const StyledButtonGroup = styled.div`
 //=================================================================================
 const App = () => {
   const [numCells, setNumCells] = useState(9);
+  const [turnsCount, setTurnsCount] = useState(0);
   const [message, setMessage] = useState(
     "find all the squares with the same pitch"
   );
@@ -154,6 +155,7 @@ const App = () => {
     if (numSelectedCells === 1) return;
 
     if (numSelectedCells === 2) {
+      setTurnsCount((prev) => prev + 1);
       if (guessesAreCorrect(selectedCells)) {
         const cellsMarkedCorrect = markSelectedCellsCorrect(newCells);
         return checkGameOver(cellsMarkedCorrect);
@@ -195,7 +197,8 @@ const App = () => {
       (cell) => cell.guessed === true
     ).length;
 
-    if (numGuessedCells === numSoundCells) setMessage("you win! 🥳");
+    if (numGuessedCells === numSoundCells)
+      setMessage(`you win in ${turnsCount} turns! 🥳`);
   };
 
   const handleRestart = () => {
@@ -203,6 +206,7 @@ const App = () => {
     setCells(newCells);
 
     setMessage("");
+    setTurnsCount(0);
   };
 
   const handleChangeNumCells = (e) => {
@@ -214,7 +218,9 @@ const App = () => {
 
     setNumCells(newNumCells);
     setCells(createRandomCells(newNumSoundCells));
+
     setMessage("");
+    setTurnsCount(0);
   };
 
   return (
