@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import Cell, { MiddleCell } from "./components/Cell";
 import styled from "styled-components";
-import BootstrapContainer from "./components/BootstrapContainer";
+import ResponsiveContainer from "./components/ResponsiveContainer";
 import GlobalStyles from "./GlobalStyles";
 import soundsData from "./sounds/soundsData";
+import Footer from "./components/Footer";
 
 const selectRandomElInArray = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -67,13 +68,21 @@ const createRandomCells = (numCells) => {
 };
 
 //=================================================================================
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+`;
+
 const StyledBoard = styled.div`
   width: 100%;
-  height: 100%;
   display: grid;
   grid-template-columns: ${({ boardSize }) => `repeat(${boardSize}, 1fr)`};
   align-items: center;
-  grid-gap: 8px;
+  gap: var(--s);
 `;
 
 //=================================================================================
@@ -172,58 +181,61 @@ const App = () => {
   return (
     <>
       <GlobalStyles />
-      <BootstrapContainer>
-        {boardMiddleId ? (
-          <StyledBoard boardSize={boardSize}>
-            {new Array(numCells)
-              .fill(0)
-              .map((_el, i) =>
-                i < boardMiddleId ? (
-                  <Cell
-                    key={i}
-                    cellId={i}
-                    handleSelect={handleSelectCell}
-                    selected={cells[i].selected}
-                    sound={cells[i].sound}
-                    guessed={cells[i].guessed}
-                  />
-                ) : i === boardMiddleId ? (
-                  <MiddleCell key={i} />
-                ) : (
-                  <Cell
-                    key={i}
-                    cellId={i - 1}
-                    handleSelect={handleSelectCell}
-                    selected={cells[i - 1].selected}
-                    sound={cells[i - 1].sound}
-                    guessed={cells[i - 1].guessed}
-                  />
-                )
-              )}
-          </StyledBoard>
-        ) : (
-          <StyledBoard boardSize={boardSize}>
-            {new Array(numCells).fill(0).map((_el, i) => (
-              <Cell
-                key={i}
-                cellId={i}
-                handleSelect={handleSelectCell}
-                selected={cells[i].selected}
-                sound={cells[i].sound}
-                guessed={cells[i].guessed}
-              />
-            ))}
-          </StyledBoard>
-        )}
-        <div>{message && message}</div>
-        <button onClick={handleRestart}>Restart</button>
-        <select onChange={handleChangeNumCells} value={numCells}>
-          <option value={9}>3 x 3</option>
-          <option value={16}>4 x 4</option>
-          <option value={25}>5 x 5</option>
-          <option value={36}>6 x 6</option>
-        </select>
-      </BootstrapContainer>
+      <MainContainer>
+        <ResponsiveContainer>
+          {boardMiddleId ? (
+            <StyledBoard boardSize={boardSize}>
+              {new Array(numCells)
+                .fill(0)
+                .map((_el, i) =>
+                  i < boardMiddleId ? (
+                    <Cell
+                      key={i}
+                      cellId={i}
+                      handleSelect={handleSelectCell}
+                      selected={cells[i].selected}
+                      sound={cells[i].sound}
+                      guessed={cells[i].guessed}
+                    />
+                  ) : i === boardMiddleId ? (
+                    <MiddleCell key={i} />
+                  ) : (
+                    <Cell
+                      key={i}
+                      cellId={i - 1}
+                      handleSelect={handleSelectCell}
+                      selected={cells[i - 1].selected}
+                      sound={cells[i - 1].sound}
+                      guessed={cells[i - 1].guessed}
+                    />
+                  )
+                )}
+            </StyledBoard>
+          ) : (
+            <StyledBoard boardSize={boardSize}>
+              {new Array(numCells).fill(0).map((_el, i) => (
+                <Cell
+                  key={i}
+                  cellId={i}
+                  handleSelect={handleSelectCell}
+                  selected={cells[i].selected}
+                  sound={cells[i].sound}
+                  guessed={cells[i].guessed}
+                />
+              ))}
+            </StyledBoard>
+          )}
+          <div>{message && message}</div>
+          <button onClick={handleRestart}>Restart</button>
+          <select onChange={handleChangeNumCells} value={numCells}>
+            <option value={9}>3 x 3</option>
+            <option value={16}>4 x 4</option>
+            <option value={25}>5 x 5</option>
+            <option value={36}>6 x 6</option>
+          </select>
+        </ResponsiveContainer>
+        <Footer />
+      </MainContainer>
     </>
   );
 };
