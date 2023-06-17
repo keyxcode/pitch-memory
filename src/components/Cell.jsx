@@ -3,12 +3,13 @@ import useSound from "use-sound";
 
 const StyledCell = styled.div`
   aspect-ratio: 1/1;
-  border: ${({ guessed }) => (guessed ? `5px solid green` : `5px solid red`)};
+  border: ${({ guessed }) => (guessed ? `4px solid green` : `4px solid red`)};
   background-color: ${({ guessed, selected }) =>
     selected ? `lightcyan` : guessed ? `lightgreen` : `lightskyblue`};
   cursor: pointer;
   color: light;
   overflow: hidden;
+  border-radius: var(--md);
 `;
 
 export const MiddleCell = styled(StyledCell)`
