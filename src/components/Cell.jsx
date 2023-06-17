@@ -26,7 +26,7 @@ export const MiddleCell = styled(StyledCell)`
 `;
 
 const Cell = ({ cellId, handleSelect, selected, sound, guessed }) => {
-  const [play] = useSound(sound.path);
+  const [play] = useSound(sound.path, { volume: 4 });
 
   const handleClick = () => {
     if (guessed) return;
