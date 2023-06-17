@@ -92,7 +92,7 @@ const StyledButton = styled.button`
   border-radius: var(--xs);
   cursor: pointer;
   border: none;
-  height: 100%;
+  height: 50px;
 
   &:active {
     background-color: var(--darker);
@@ -104,7 +104,7 @@ const StyledSelect = styled.select`
   background-color: var(--dark);
   color: var(--lighter);
   border-radius: var(--xs);
-  height: 100%;
+  height: 50px;
 `;
 
 const StyledButtonGroup = styled.div`
@@ -115,10 +115,10 @@ const StyledButtonGroup = styled.div`
   gap: var(--s);
   align-items: end;
   flex-wrap: wrap;
-  height: 50px;
   border: 2px solid var(--dark);
   border-radius: var(--s);
   padding: var(--s);
+  transition-duration: 0.4s;
 `;
 
 //=================================================================================
@@ -128,6 +128,7 @@ const App = () => {
   const [message, setMessage] = useState(
     "find all the squares with the same pitch"
   );
+  const [funFact, setFunFact] = useState("");
 
   const boardSize = useMemo(() => Math.sqrt(numCells), [numCells]);
   const boardMiddleId = useMemo(
@@ -138,6 +139,7 @@ const App = () => {
     () => (numCells % 2 === 0 ? numCells : numCells - 1),
     [numCells]
   );
+  const minTurnsCount = useMemo(() => (numSoundCells * 3) / 4, [numSoundCells]);
 
   const [cells, setCells] = useState(createRandomCells(numSoundCells));
 
@@ -155,10 +157,17 @@ const App = () => {
     if (numSelectedCells === 1) return;
 
     if (numSelectedCells === 2) {
-      setTurnsCount((prev) => prev + 1);
+      const newTurnsCount = turnsCount + 1;
+      setTurnsCount(newTurnsCount);
+
       if (guessesAreCorrect(selectedCells)) {
         const cellsMarkedCorrect = markSelectedCellsCorrect(newCells);
-        return checkGameOver(cellsMarkedCorrect);
+        if (checkGameOver(cellsMarkedCorrect)) {
+          setMessage(`You win in ${newTurnsCount} turns! 🥳`);
+          setFunFact(
+            `Did you know that ${minTurnsCount} turns are the minimum to win this game with no lucky guess?`
+          );
+        }
       } else {
         return setAllCellsUnselected();
       }
@@ -197,16 +206,28 @@ const App = () => {
       (cell) => cell.guessed === true
     ).length;
 
-    if (numGuessedCells === numSoundCells)
-      setMessage(`you win in ${turnsCount} turns! 🥳`);
+    if (numGuessedCells === numSoundCells) return true;
   };
 
   const handleRestart = () => {
-    const newCells = createRandomCells(numSoundCells);
-    setCells(newCells);
+    const randomCells = createRandomCells(numSoundCells);
+    const newCellsAllSelected = randomCells.map((cell) => ({
+      ...cell,
+      selected: true,
+    }));
+    setCells(newCellsAllSelected);
 
     setMessage("");
+    setFunFact("");
     setTurnsCount(0);
+
+    setTimeout(() => {
+      const newCells = newCellsAllSelected.map((cell) => ({
+        ...cell,
+        selected: false,
+      }));
+      setCells(newCells);
+    }, 500);
   };
 
   const handleChangeNumCells = (e) => {
@@ -220,6 +241,7 @@ const App = () => {
     setCells(createRandomCells(newNumSoundCells));
 
     setMessage("");
+    setFunFact("");
     setTurnsCount(0);
   };
 
@@ -278,7 +300,8 @@ const App = () => {
               <option value={25}>5 x 5</option>
               <option value={36}>6 x 6</option>
             </StyledSelect>
-            <div>{message && message}</div>
+            <div>{message}</div>
+            <div style={{ fontStyle: "italic" }}>{funFact}</div>
           </StyledButtonGroup>
         </ResponsiveContainer>
         <Footer />

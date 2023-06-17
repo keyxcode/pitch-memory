@@ -11,9 +11,13 @@ const StyledCell = styled.div`
   overflow: hidden;
   border-radius: var(--s);
   transform: ${({ selected }) => (selected ? `rotateY(180deg)` : `rotateY(0)`)};
-  transition: all ease-in 0.5s;
+  transition: all ease-in 0.4s;
   font-weight: bold;
   font-size: var(--l);
+
+  &:hover {
+    filter: ${({ sound }) => sound && `brightness(0.9)`};
+  }
 `;
 
 export const MiddleCell = styled(StyledCell)`
@@ -33,7 +37,12 @@ const Cell = ({ cellId, handleSelect, selected, sound, guessed }) => {
   // console.log("rendering cell");
 
   return (
-    <StyledCell onClick={handleClick} guessed={guessed} selected={selected}>
+    <StyledCell
+      onClick={handleClick}
+      guessed={guessed}
+      selected={selected}
+      sound={sound}
+    >
       <div
         style={{
           display: "flex",
