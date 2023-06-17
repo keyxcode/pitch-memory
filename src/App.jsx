@@ -85,10 +85,45 @@ const StyledBoard = styled.div`
   gap: var(--s);
 `;
 
+const StyledButton = styled.button`
+  padding: var(--s);
+  background-color: var(--dark);
+  color: var(--lighter);
+  border-radius: var(--xs);
+  cursor: pointer;
+  border: none;
+  height: 100%;
+
+  &:active {
+    background-color: var(--darker);
+    transition-duration: 0.3s;
+  }
+`;
+
+const StyledSelect = styled.select`
+  background-color: var(--dark);
+  color: var(--lighter);
+  border-radius: var(--xs);
+  height: 100%;
+`;
+
+const StyledButtonGroup = styled.div`
+  margin-top: var(--s);
+  display: flex;
+  width: 100%;
+  justify-content: start;
+  gap: var(--s);
+  align-items: end;
+  flex-wrap: wrap;
+  max-height: 50px;
+`;
+
 //=================================================================================
 const App = () => {
   const [numCells, setNumCells] = useState(9);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(
+    "find all the squares with the same pitch"
+  );
 
   const boardSize = useMemo(() => Math.sqrt(numCells), [numCells]);
   const boardMiddleId = useMemo(
@@ -157,7 +192,7 @@ const App = () => {
       (cell) => cell.guessed === true
     ).length;
 
-    if (numGuessedCells === numSoundCells) setMessage("you win");
+    if (numGuessedCells === numSoundCells) setMessage("you win!");
   };
 
   const handleRestart = () => {
@@ -176,6 +211,7 @@ const App = () => {
 
     setNumCells(newNumCells);
     setCells(createRandomCells(newNumSoundCells));
+    setMessage("");
   };
 
   return (
@@ -225,14 +261,16 @@ const App = () => {
               ))}
             </StyledBoard>
           )}
-          <div>{message && message}</div>
-          <button onClick={handleRestart}>Restart</button>
-          <select onChange={handleChangeNumCells} value={numCells}>
-            <option value={9}>3 x 3</option>
-            <option value={16}>4 x 4</option>
-            <option value={25}>5 x 5</option>
-            <option value={36}>6 x 6</option>
-          </select>
+          <StyledButtonGroup>
+            <StyledButton onClick={handleRestart}>Restart</StyledButton>
+            <StyledSelect onChange={handleChangeNumCells} value={numCells}>
+              <option value={9}>3 x 3</option>
+              <option value={16}>4 x 4</option>
+              <option value={25}>5 x 5</option>
+              <option value={36}>6 x 6</option>
+            </StyledSelect>
+            <div>{message && message}</div>
+          </StyledButtonGroup>
         </ResponsiveContainer>
         <Footer />
       </MainContainer>

@@ -7,15 +7,11 @@ font-family: "Silkscreen", system-ui, -apple-system, BlinkMacSystemFont,
   "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
   sans-serif;
 
-/* --red: #d3242b;
---dark-red: #ac2933;
---light-red: #ee1825;
---green: #00a851;
---yellow: #fec803;
---blue: #01aeec;
---black: #1a1619;
---dark-gray: #58585a;
---light-gray: #f2f3f3; */
+--darker: #001524;
+--dark: #15616D;
+--mid: #78290F;
+--light: #FF7D00;
+--lighter: #FFECD1;
 
 --xxs: 1px;
 --xs: 4px;
@@ -37,7 +33,7 @@ body {
   justify-content: center;
   height: 100vh;
   width: 100%;
-  background-color: lightgoldenrodyellow;
+  background-color: var(--lighter);
 }
 `;
 

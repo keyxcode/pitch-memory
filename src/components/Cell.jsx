@@ -5,11 +5,11 @@ const StyledCell = styled.div`
   aspect-ratio: 1/1;
   border: ${({ guessed }) => (guessed ? `4px solid green` : `4px solid red`)};
   background-color: ${({ guessed, selected }) =>
-    selected ? `lightcyan` : guessed ? `lightgreen` : `lightskyblue`};
+    selected ? `lightcyan` : guessed ? `lightgreen` : `var(--lighter)`};
   cursor: pointer;
-  color: light;
+  color: var(--darker);
   overflow: hidden;
-  border-radius: var(--md);
+  border-radius: var(--s);
 `;
 
 export const MiddleCell = styled(StyledCell)`

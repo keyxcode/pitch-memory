@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 const StyledFooter = styled.div`
   text-align: center;
-  background-color: pink;
+  background-color: var(--darker);
+  color: var(--lighter);
   width: 100%;
   padding: var(--l);
 `;
