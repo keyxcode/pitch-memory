@@ -1,127 +1,15 @@
 import { useMemo, useState } from "react";
+import createRandomCells from "./utils/randomCellsGenerator";
 import Cell, { MiddleCell } from "./components/Cell";
-import styled from "styled-components";
-import ResponsiveContainer from "./components/ResponsiveContainer";
 import GlobalStyles from "./GlobalStyles";
-import soundsData from "./sounds/soundsData";
+import MainContainer from "./components/MainContainer";
+import ResponsiveContainer from "./components/ResponsiveContainer";
+import StyledBoard from "./components/StyledBoard";
+import StyledButtonGroup from "./components/StyledButtonGroup";
+import StyledButton from "./components/StyledButton";
+import StyledSelect from "./components/StyledSelect";
 import Footer from "./components/Footer";
 
-const selectRandomElInArray = (arr) => {
-  return arr[Math.floor(Math.random() * arr.length)];
-};
-
-const getRandomElements = (arr, n) => {
-  let arrClone = arr.slice();
-  console.log(soundsData.length);
-  const randomElements = [];
-
-  while (randomElements.length < n) {
-    console.log("generating...");
-    const el = selectRandomElInArray(arrClone);
-    console.log("el", el);
-    arrClone = arrClone.filter((e) => e != el);
-    randomElements.push(el);
-  }
-
-  return randomElements;
-};
-
-const shuffleArray = (arr) => {
-  let currentIndex = arr.length;
-  let randomIndex;
-
-  // While there remain elements to shuffle.
-  while (currentIndex != 0) {
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    // And swap it with the current element.
-    [arr[currentIndex], arr[randomIndex]] = [
-      arr[randomIndex],
-      arr[currentIndex],
-    ];
-  }
-
-  return arr;
-};
-
-const createRandomCells = (numCells) => {
-  if (numCells % 2 != 0)
-    return console.log("This function takes only even num");
-
-  // This is to assure there's a pair to every sound
-  const halfRandomSounds = getRandomElements(soundsData, numCells / 2);
-  const fullRandomSounds = [...halfRandomSounds, ...halfRandomSounds];
-  const shuffledRandomSounds = shuffleArray(fullRandomSounds);
-
-  const randomCells = Array(numCells)
-    .fill({ selected: false, guessed: false })
-    .map((cell, id) => ({
-      ...cell,
-      sound: shuffledRandomSounds[id],
-    }));
-
-  console.log("created new cells", randomCells);
-
-  return randomCells;
-};
-
-//=================================================================================
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 100vh;
-  width: 100%;
-`;
-
-const StyledBoard = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: ${({ boardSize }) => `repeat(${boardSize}, 1fr)`};
-  align-items: center;
-  gap: var(--s);
-`;
-
-const StyledButton = styled.button`
-  padding: var(--s);
-  background-color: var(--dark);
-  color: var(--lighter);
-  border-radius: var(--xs);
-  cursor: pointer;
-  border: none;
-  height: 50px;
-
-  &:active {
-    background-color: var(--darker);
-    transition-duration: 0.3s;
-  }
-`;
-
-const StyledSelect = styled.select`
-  background-color: var(--dark);
-  color: var(--lighter);
-  border-radius: var(--xs);
-  height: 50px;
-`;
-
-const StyledButtonGroup = styled.div`
-  margin-top: var(--s);
-  display: flex;
-  width: 100%;
-  justify-content: start;
-  gap: var(--s);
-  align-items: end;
-  flex-wrap: wrap;
-  border: 2px solid var(--dark);
-  border-radius: var(--s);
-  padding: var(--s);
-  transition-duration: 0.4s;
-`;
-
-//=================================================================================
 const App = () => {
   const [numCells, setNumCells] = useState(9);
   const [turnsCount, setTurnsCount] = useState(0);
@@ -162,7 +50,7 @@ const App = () => {
 
       if (guessesAreCorrect(selectedCells)) {
         const cellsMarkedCorrect = markSelectedCellsCorrect(newCells);
-        if (checkGameOver(cellsMarkedCorrect)) {
+        if (gameIsOver(cellsMarkedCorrect)) {
           setMessage(`You win in ${newTurnsCount} turns! 🥳`);
           setFunFact(
             `Did you know that ${minTurnsCount} turns are the minimum to win this game with no lucky guess?`
@@ -175,7 +63,7 @@ const App = () => {
   };
 
   const guessesAreCorrect = (selectedCells) => {
-    console.log(selectedCells);
+    // console.log(selectedCells);
     if (selectedCells[0].sound === selectedCells[1].sound) return true;
     return false;
   };
@@ -201,7 +89,7 @@ const App = () => {
     }, 500);
   };
 
-  const checkGameOver = (cells) => {
+  const gameIsOver = (cells) => {
     const numGuessedCells = cells.filter(
       (cell) => cell.guessed === true
     ).length;
@@ -217,7 +105,7 @@ const App = () => {
     }));
     setCells(newCellsAllSelected);
 
-    setMessage("");
+    setMessage("find all the squares with the same pitch");
     setFunFact("");
     setTurnsCount(0);
 
@@ -231,7 +119,7 @@ const App = () => {
   };
 
   const handleChangeNumCells = (e) => {
-    console.log("changed board size to", e.target.value);
+    // console.log("changed board size to", e.target.value);
 
     const newNumCells = parseInt(e.target.value);
     const newNumSoundCells =
@@ -240,7 +128,7 @@ const App = () => {
     setNumCells(newNumCells);
     setCells(createRandomCells(newNumSoundCells));
 
-    setMessage("");
+    setMessage("find all the squares with the same pitch");
     setFunFact("");
     setTurnsCount(0);
   };

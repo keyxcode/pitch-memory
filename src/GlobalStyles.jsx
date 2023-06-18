@@ -18,6 +18,7 @@ font-family: "Silkscreen", system-ui, -apple-system, BlinkMacSystemFont,
 --s: 8px;
 --md: 16px;
 --l: 24px;
+--xl: 36px;
 --xxl: 48px;
 }
 

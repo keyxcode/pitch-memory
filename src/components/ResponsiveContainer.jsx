@@ -16,9 +16,6 @@ const ResponsiveContainer = styled.div`
   @media (min-width: 576px) {
     width: 540px;
   }
-  @media (min-width: 768px) {
-    width: 650px;
-  }
 `;
 
 export default ResponsiveContainer;
