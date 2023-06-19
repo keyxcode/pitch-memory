@@ -3,19 +3,20 @@ import Cell, { MiddleCell } from "./Cell";
 import { Cell as CellInterface } from "../types";
 
 interface BoardProps {
-  boardMiddleId: number | null,
-  boardSize: number,
-  numCells: number,
-  handleSelectCell: (id: number) => void,
-  cells: CellInterface[],
+  boardMiddleId: number | null;
+  boardSize: number;
+  numCells: number;
+  handleSelectCell: (id: number) => void;
+  cells: CellInterface[];
 }
 
-const StyledBoard = styled.div<Pick<BoardProps, 'boardSize'>>`
+const StyledBoard = styled.div<Pick<BoardProps, "boardSize">>`
   width: 100%;
   display: grid;
   grid-template-columns: ${({ boardSize }) => `repeat(${boardSize}, 1fr)`};
   align-items: center;
   gap: var(--s);
+  margin-bottom: var(--md);
 `;
 
 const Board = ({

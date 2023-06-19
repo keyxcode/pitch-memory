@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const ResponsiveContainer = styled.div`
   margin: "auto";
-  padding: var(--md);
+  padding: var(--l);
   display: flex;
   flex-direction: column;
   justify-content: center;

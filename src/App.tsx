@@ -6,7 +6,9 @@ import ResponsiveContainer from "./components/ResponsiveContainer";
 import Board from "./components/Board";
 import ButtonGroup from "./components/ButtonGroup";
 import Footer from "./components/Footer";
+import Confetti from "react-confetti";
 import { Cell } from "./types";
+import Header from "./components/Header";
 
 const App = () => {
   const [numCells, setNumCells] = useState(9);
@@ -15,6 +17,7 @@ const App = () => {
     "find all the squares with the same pitch"
   );
   const [funFact, setFunFact] = useState("");
+  const [gameOver, setGameOver] = useState(false);
 
   const boardSize = useMemo(() => Math.sqrt(numCells), [numCells]);
   const boardMiddleId = useMemo(
@@ -48,12 +51,7 @@ const App = () => {
 
       if (guessesAreCorrect(selectedCells)) {
         const cellsMarkedCorrect = markSelectedCellsCorrect(newCells);
-        if (gameIsOver(cellsMarkedCorrect)) {
-          setMessage(`You win in ${newTurnsCount} turns! 🥳`);
-          setFunFact(
-            `Did you know that ${minTurnsCount} turns are the minimum to win this game with no lucky guess?`
-          );
-        }
+        checkGameOver(cellsMarkedCorrect, newTurnsCount);
       } else {
         setAllCellsUnselected();
       }
@@ -88,12 +86,24 @@ const App = () => {
   };
 
   const gameIsOver = (cells: Cell[]): boolean => {
-    const numGuessedCells = cells.filter(
-      (cell) => cell.guessed === true
-    ).length;
+    return cells.every((cell) => cell.guessed === true);
+  };
 
-    if (numGuessedCells === numSoundCells) return true;
-    return false
+  const checkGameOver = (cells: Cell[], turnsCount: number): void => {
+    if (gameIsOver(cells)) {
+      setGameOver(true);
+      setMessage(`You win in ${turnsCount} turns! 🥳`);
+      setFunFact(
+        `Did you know that ${minTurnsCount} turns are the minimum to win this game with no lucky guess?`
+      );
+    }
+  };
+
+  const init = (): void => {
+    setGameOver(false);
+    setMessage("find all the squares with the same pitch");
+    setFunFact("");
+    setTurnsCount(0);
   };
 
   const handleRestart = (): void => {
@@ -104,9 +114,7 @@ const App = () => {
     }));
     setCells(newCellsAllSelected);
 
-    setMessage("find all the squares with the same pitch");
-    setFunFact("");
-    setTurnsCount(0);
+    init();
 
     setTimeout(() => {
       const newCells = newCellsAllSelected.map((cell) => ({
@@ -127,9 +135,7 @@ const App = () => {
     setNumCells(newNumCells);
     setCells(createRandomCells(newNumSoundCells));
 
-    setMessage("find all the squares with the same pitch");
-    setFunFact("");
-    setTurnsCount(0);
+    init();
   };
 
   return (
@@ -137,6 +143,8 @@ const App = () => {
       <GlobalStyles />
       <MainContainer>
         <ResponsiveContainer>
+          {gameOver && <Confetti />}
+          <Header />
           <Board
             boardMiddleId={boardMiddleId}
             boardSize={boardSize}

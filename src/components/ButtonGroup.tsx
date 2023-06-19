@@ -9,7 +9,6 @@ interface ButtonGroupProps {
 }
 
 const StyledButtonGroup = styled.div`
-  margin-top: var(--s);
   display: flex;
   width: 100%;
   justify-content: start;
@@ -52,7 +51,12 @@ const ButtonGroup = ({
 }: ButtonGroupProps) => (
   <StyledButtonGroup>
     <StyledButton onClick={handleRestart}>Restart</StyledButton>
-    <StyledSelect onChange={e => { handleChangeNumCells(e) }} value={numCells}>
+    <StyledSelect
+      onChange={(e) => {
+        handleChangeNumCells(e);
+      }}
+      value={numCells}
+    >
       <option value={9}>3 x 3</option>
       <option value={16}>4 x 4</option>
       <option value={25}>5 x 5</option>
