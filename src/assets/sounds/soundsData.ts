@@ -24,7 +24,12 @@ import Bb4 from "../sounds/Bb4.mp3";
 import B4 from "../sounds/B4.mp3";
 import C5 from "../sounds/C5.mp3";
 
-export default [
+interface Sound {
+  path: string;
+  name: string;
+}
+
+const sounds: Sound[] = [
   { path: C3, name: "C3" },
   { path: Db3, name: "Db3" },
   { path: D3, name: "D3" },
@@ -51,3 +56,5 @@ export default [
   { path: B4, name: "B4" },
   { path: C5, name: "C5" },
 ];
+
+export default sounds;

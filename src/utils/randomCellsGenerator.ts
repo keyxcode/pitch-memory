@@ -1,10 +1,11 @@
 import soundsData from "../assets/sounds/soundsData";
+import { Cell } from "../types";
 
-const selectRandomElInArray = (arr) => {
+const selectRandomElInArray = (arr: any[]) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
-const getRandomElements = (arr, n) => {
+const getRandomElements = (arr: any[], n: number) => {
   let arrClone = arr.slice();
   console.log(soundsData.length);
   const randomElements = [];
@@ -20,7 +21,7 @@ const getRandomElements = (arr, n) => {
   return randomElements;
 };
 
-const shuffleArray = (arr) => {
+const shuffleArray = (arr: any[]) => {
   let currentIndex = arr.length;
   let randomIndex;
 
@@ -40,11 +41,9 @@ const shuffleArray = (arr) => {
   return arr;
 };
 
-const createRandomCells = (numCells) => {
-  if (numCells % 2 != 0)
-    return console.log("This function takes only even num");
-
-  // This is to assure there's a pair to every sound
+const createRandomCells = (numCells: number): Cell[] => {
+  // This function takes only even numbers
+  // Assure there's a pair to every sound
   const halfRandomSounds = getRandomElements(soundsData, numCells / 2);
   const fullRandomSounds = [...halfRandomSounds, ...halfRandomSounds];
   const shuffledRandomSounds = shuffleArray(fullRandomSounds);
@@ -56,7 +55,7 @@ const createRandomCells = (numCells) => {
       sound: shuffledRandomSounds[id],
     }));
 
-  console.log("created new cells", randomCells);
+  // console.log("created new cells", randomCells);
 
   return randomCells;
 };

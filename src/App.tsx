@@ -6,6 +6,7 @@ import ResponsiveContainer from "./components/ResponsiveContainer";
 import Board from "./components/Board";
 import Footer from "./components/Footer";
 import ButtonGroup from "./components/ButtonGroup";
+import { Cell } from "./types";
 
 const App = () => {
   const [numCells, setNumCells] = useState(9);
@@ -28,7 +29,7 @@ const App = () => {
 
   const [cells, setCells] = useState(createRandomCells(numSoundCells));
 
-  const handleSelectCell = (id) => {
+  const handleSelectCell = (id: number): void => {
     if (cells[id].selected === true) return;
 
     const newCells = cells.map((cell, i) =>
@@ -54,18 +55,18 @@ const App = () => {
           );
         }
       } else {
-        return setAllCellsUnselected();
+        setAllCellsUnselected();
       }
     }
   };
 
-  const guessesAreCorrect = (selectedCells) => {
+  const guessesAreCorrect = (selectedCells: Cell[]): boolean => {
     // console.log(selectedCells);
     if (selectedCells[0].sound === selectedCells[1].sound) return true;
     return false;
   };
 
-  const markSelectedCellsCorrect = (cells) => {
+  const markSelectedCellsCorrect = (cells: Cell[]): Cell[] => {
     const newCells = cells.map((cell) =>
       cell.selected === true
         ? { ...cell, guessed: true, selected: false }
@@ -79,22 +80,23 @@ const App = () => {
     return newCells;
   };
 
-  const setAllCellsUnselected = () => {
+  const setAllCellsUnselected = (): void => {
     const newCells = cells.map((cell) => ({ ...cell, selected: false }));
-    return setTimeout(() => {
+    setTimeout(() => {
       setCells(newCells);
     }, 500);
   };
 
-  const gameIsOver = (cells) => {
+  const gameIsOver = (cells: Cell[]): boolean => {
     const numGuessedCells = cells.filter(
       (cell) => cell.guessed === true
     ).length;
 
     if (numGuessedCells === numSoundCells) return true;
+    return false
   };
 
-  const handleRestart = () => {
+  const handleRestart = (): void => {
     const randomCells = createRandomCells(numSoundCells);
     const newCellsAllSelected = randomCells.map((cell) => ({
       ...cell,
@@ -115,7 +117,7 @@ const App = () => {
     }, 500);
   };
 
-  const handleChangeNumCells = (e) => {
+  const handleChangeNumCells = (e: React.ChangeEvent<HTMLInputElement>) => {
     // console.log("changed board size to", e.target.value);
 
     const newNumCells = parseInt(e.target.value);
