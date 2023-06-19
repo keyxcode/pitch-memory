@@ -1,4 +1,4 @@
-import soundsData from "../sounds/soundsData";
+import soundsData from "../assets/sounds/soundsData";
 
 const selectRandomElInArray = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];

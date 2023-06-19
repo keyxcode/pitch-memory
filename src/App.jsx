@@ -1,14 +1,11 @@
 import { useMemo, useState } from "react";
 import createRandomCells from "./utils/randomCellsGenerator";
-import Cell, { MiddleCell } from "./components/Cell";
 import GlobalStyles from "./GlobalStyles";
 import MainContainer from "./components/MainContainer";
 import ResponsiveContainer from "./components/ResponsiveContainer";
-import StyledBoard from "./components/StyledBoard";
-import StyledButtonGroup from "./components/StyledButtonGroup";
-import StyledButton from "./components/StyledButton";
-import StyledSelect from "./components/StyledSelect";
+import Board from "./components/Board";
 import Footer from "./components/Footer";
+import ButtonGroup from "./components/ButtonGroup";
 
 const App = () => {
   const [numCells, setNumCells] = useState(9);
@@ -138,59 +135,20 @@ const App = () => {
       <GlobalStyles />
       <MainContainer>
         <ResponsiveContainer>
-          {boardMiddleId ? (
-            <StyledBoard boardSize={boardSize}>
-              {new Array(numCells)
-                .fill(0)
-                .map((_el, i) =>
-                  i < boardMiddleId ? (
-                    <Cell
-                      key={i}
-                      cellId={i}
-                      handleSelect={handleSelectCell}
-                      selected={cells[i].selected}
-                      sound={cells[i].sound}
-                      guessed={cells[i].guessed}
-                    />
-                  ) : i === boardMiddleId ? (
-                    <MiddleCell key={i} />
-                  ) : (
-                    <Cell
-                      key={i}
-                      cellId={i - 1}
-                      handleSelect={handleSelectCell}
-                      selected={cells[i - 1].selected}
-                      sound={cells[i - 1].sound}
-                      guessed={cells[i - 1].guessed}
-                    />
-                  )
-                )}
-            </StyledBoard>
-          ) : (
-            <StyledBoard boardSize={boardSize}>
-              {new Array(numCells).fill(0).map((_el, i) => (
-                <Cell
-                  key={i}
-                  cellId={i}
-                  handleSelect={handleSelectCell}
-                  selected={cells[i].selected}
-                  sound={cells[i].sound}
-                  guessed={cells[i].guessed}
-                />
-              ))}
-            </StyledBoard>
-          )}
-          <StyledButtonGroup>
-            <StyledButton onClick={handleRestart}>Restart</StyledButton>
-            <StyledSelect onChange={handleChangeNumCells} value={numCells}>
-              <option value={9}>3 x 3</option>
-              <option value={16}>4 x 4</option>
-              <option value={25}>5 x 5</option>
-              <option value={36}>6 x 6</option>
-            </StyledSelect>
-            <div>{message}</div>
-            <div style={{ fontStyle: "italic" }}>{funFact}</div>
-          </StyledButtonGroup>
+          <Board
+            boardMiddleId={boardMiddleId}
+            boardSize={boardSize}
+            numCells={numCells}
+            handleSelectCell={handleSelectCell}
+            cells={cells}
+          />
+          <ButtonGroup
+            handleRestart={handleRestart}
+            handleChangeNumCells={handleChangeNumCells}
+            numCells={numCells}
+            message={message}
+            funFact={funFact}
+          />
         </ResponsiveContainer>
         <Footer />
       </MainContainer>
