@@ -8,10 +8,6 @@ const StyledFooter = styled.div`
   padding: var(--l);
 `;
 
-const Footer = () => (
-  <>
-    <StyledFooter>Copyright © keyxcode</StyledFooter>
-  </>
-);
+const Footer = () => <StyledFooter>Copyright © keyxcode</StyledFooter>;
 
 export default Footer;

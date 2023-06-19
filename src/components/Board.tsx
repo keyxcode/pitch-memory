@@ -1,7 +1,16 @@
 import styled from "styled-components";
 import Cell, { MiddleCell } from "./Cell";
+import { Cell as CellInterface } from "../types";
 
-const StyledBoard = styled.div`
+interface BoardProps {
+  boardMiddleId: number | null,
+  boardSize: number,
+  numCells: number,
+  handleSelectCell: (id: number) => void,
+  cells: CellInterface[],
+}
+
+const StyledBoard = styled.div<Pick<BoardProps, 'boardSize'>>`
   width: 100%;
   display: grid;
   grid-template-columns: ${({ boardSize }) => `repeat(${boardSize}, 1fr)`};
@@ -15,7 +24,7 @@ const Board = ({
   numCells,
   handleSelectCell,
   cells,
-}) => (
+}: BoardProps) => (
   <>
     {boardMiddleId ? (
       <StyledBoard boardSize={boardSize}>
@@ -32,7 +41,7 @@ const Board = ({
                 guessed={cells[i].guessed}
               />
             ) : i === boardMiddleId ? (
-              <MiddleCell key={i} />
+              <MiddleCell />
             ) : (
               <Cell
                 key={i}

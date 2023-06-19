@@ -1,36 +1,52 @@
 import styled from "styled-components";
 import useSound from "use-sound";
+import { Sound } from "../types";
 
-const StyledCell = styled.div`
+interface StyledCellProps {
+  onClick: () => void;
+  selected: boolean;
+  sound: Sound;
+  guessed: boolean;
+}
+
+interface CellProps {
+  handleSelect: (id: number) => void;
+  cellId: number;
+  selected: boolean;
+  sound: Sound;
+  guessed: boolean;
+}
+
+const StyledCell = styled.div<StyledCellProps>`
   aspect-ratio: 1/1;
-  border: ${({ guessed }) =>
-    guessed ? `4px solid var(--dark)` : `4px solid var(--mid)`};
-  background-color: ${({ guessed, selected }) =>
-    selected ? `lightcyan` : guessed ? `lightgreen` : `var(--lighter)`};
+  border: ${(p) =>
+    p.guessed ? `4px solid var(--dark)` : `4px solid var(--mid)`};
+  background-color: ${(p) =>
+    p.selected ? `lightcyan` : p.guessed ? `lightgreen` : `var(--lighter)`};
   cursor: pointer;
   color: var(--darker);
   overflow: hidden;
   border-radius: var(--s);
-  transform: ${({ selected }) => (selected ? `rotateY(180deg)` : `rotateY(0)`)};
+  transform: ${(p) => (p.selected ? `rotateY(180deg)` : `rotateY(0)`)};
   transition: all ease-in 0.4s;
   font-weight: bold;
   font-size: var(--l);
 
   &:hover {
-    filter: ${({ sound }) => sound && `brightness(0.9)`};
+    filter: ${(p) => p.sound && `brightness(0.9)`};
   }
 `;
 
-export const MiddleCell = styled(StyledCell)`
+export const MiddleCell = styled(StyledCell) <any>`
   border: 0;
   cursor: default;
   background-color: var(--lighter);
 `;
 
-const Cell = ({ cellId, handleSelect, selected, sound, guessed }) => {
+const Cell = ({ cellId, handleSelect, selected, sound, guessed }: CellProps) => {
   const [play] = useSound(sound.path, { volume: 2 });
 
-  const handleClick = () => {
+  const handleClick = (): void => {
     if (guessed) return;
     handleSelect(cellId);
     play();

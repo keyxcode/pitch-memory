@@ -4,8 +4,8 @@ import GlobalStyles from "./GlobalStyles";
 import MainContainer from "./components/MainContainer";
 import ResponsiveContainer from "./components/ResponsiveContainer";
 import Board from "./components/Board";
-import Footer from "./components/Footer";
 import ButtonGroup from "./components/ButtonGroup";
+import Footer from "./components/Footer";
 import { Cell } from "./types";
 
 const App = () => {
@@ -117,7 +117,7 @@ const App = () => {
     }, 500);
   };
 
-  const handleChangeNumCells = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeNumCells = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log("changed board size to", e.target.value);
 
     const newNumCells = parseInt(e.target.value);

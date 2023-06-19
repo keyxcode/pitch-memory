@@ -1,5 +1,13 @@
 import styled from "styled-components";
 
+interface ButtonGroupProps {
+  handleRestart: () => void;
+  handleChangeNumCells: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  numCells: number;
+  message: string;
+  funFact: string;
+}
+
 const StyledButtonGroup = styled.div`
   margin-top: var(--s);
   display: flex;
@@ -41,10 +49,10 @@ const ButtonGroup = ({
   numCells,
   message,
   funFact,
-}) => (
+}: ButtonGroupProps) => (
   <StyledButtonGroup>
     <StyledButton onClick={handleRestart}>Restart</StyledButton>
-    <StyledSelect onChange={handleChangeNumCells} value={numCells}>
+    <StyledSelect onChange={e => { handleChangeNumCells(e) }} value={numCells}>
       <option value={9}>3 x 3</option>
       <option value={16}>4 x 4</option>
       <option value={25}>5 x 5</option>

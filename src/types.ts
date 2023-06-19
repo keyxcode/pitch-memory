@@ -1,5 +1,10 @@
+export interface Sound {
+  path: string;
+  name: string;
+}
+
 export interface Cell {
-  sound: string;
+  sound: Sound;
   selected: boolean;
   guessed: boolean;
 }

@@ -23,11 +23,7 @@ import A4 from "../sounds/A4.mp3";
 import Bb4 from "../sounds/Bb4.mp3";
 import B4 from "../sounds/B4.mp3";
 import C5 from "../sounds/C5.mp3";
-
-interface Sound {
-  path: string;
-  name: string;
-}
+import { Sound } from "../../types";
 
 const sounds: Sound[] = [
   { path: C3, name: "C3" },
