@@ -1,5 +1,4 @@
-import { useMemo, useState } from "react";
-import createRandomCells from "./utils/randomCellsGenerator";
+import { useMemo, useState, useEffect } from "react";
 import GlobalStyles from "./GlobalStyles";
 import MainContainer from "./components/MainContainer";
 import ResponsiveContainer from "./components/ResponsiveContainer";
@@ -9,9 +8,11 @@ import Footer from "./components/Footer";
 import Confetti from "react-confetti";
 import { Cell } from "./types";
 import Header from "./components/Header";
+import createRandomCells from "./utils/randomCellsGenerator";
+import getLocalStorageNumCells from "./utils/localStorage";
 
 const App = () => {
-  const [numCells, setNumCells] = useState(9);
+  const [numCells, setNumCells] = useState(getLocalStorageNumCells());
   const [turnsCount, setTurnsCount] = useState(0);
   const [message, setMessage] = useState(
     "find all the squares with the same pitch"
@@ -31,6 +32,10 @@ const App = () => {
   const minTurnsCount = useMemo(() => (numSoundCells * 3) / 4, [numSoundCells]);
 
   const [cells, setCells] = useState(createRandomCells(numSoundCells));
+
+  useEffect(() => {
+    window.localStorage.setItem("numCells", numCells.toString());
+  }, [numCells]);
 
   const handleSelectCell = (id: number): void => {
     if (cells[id].selected === true) return;
@@ -143,7 +148,7 @@ const App = () => {
       <GlobalStyles />
       <MainContainer>
         <ResponsiveContainer>
-          {gameOver && <Confetti />}
+          {gameOver && numCells === 36 && <Confetti />}
           <Header />
           <Board
             boardMiddleId={boardMiddleId}
