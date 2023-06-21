@@ -98,12 +98,10 @@ const App = () => {
     }, 500);
   };
 
-  const gameIsOver = (cells: Cell[]): boolean => {
-    return cells.every((cell) => cell.guessed === true);
-  };
-
   const checkGameOver = (cells: Cell[]): void => {
-    if (gameIsOver(cells)) {
+    const gameIsOver = cells.every((cell) => cell.guessed === true);
+
+    if (gameIsOver) {
       setGameOver(true);
     }
   };
