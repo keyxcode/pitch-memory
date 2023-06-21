@@ -16,7 +16,7 @@ const App = () => {
   const [numCells, setNumCells] = useState(getLocalStorageNumCells());
   const [turnsCount, setTurnsCount] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(true);
 
   const boardSize = useMemo(() => Math.sqrt(numCells), [numCells]);
   const boardMiddleId = useMemo(
@@ -39,7 +39,7 @@ const App = () => {
     if (gameOver) {
       setTimeout(() => {
         setModalOpen(true);
-      }, 1200);
+      }, 1000);
     } else {
       setModalOpen(false);
     }

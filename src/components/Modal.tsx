@@ -33,6 +33,7 @@ const dropDown = keyframes`
 `;
 
 const StyledModalContent = styled.div`
+  position: relative;
   background-color: var(--lighter);
   border: var(--xs) solid var(--mid);
   border-radius: var(--s);
@@ -49,19 +50,40 @@ const StyledModalButton = styled(StyledButton)`
   width: 50%;
 `;
 
+const StyledCloseButton = styled(StyledButton)`
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -10px;
+  left: calc(100% - 10px);
+  background-color: var(--mid);
+  color: var(--lighter);
+  font-weight: bold;
+
+  &:hover {
+    color: var(--light);
+  }
+`;
+
 const Modal = ({
   turnsCount,
   minTurnsCount,
   handleRestart,
   handleCloseModal,
 }: ModalProps) => (
-  <StyledModal onClick={handleCloseModal}>
+  <StyledModal>
     <ResponsiveContainer>
       <StyledModalContent>
-        <div>{`You win in ${turnsCount} turns! 🥳`}</div>
+        <StyledCloseButton onClick={handleCloseModal}>X</StyledCloseButton>
+        <div>{`You won in ${turnsCount} turns! 🥳`}</div>
         <div
           style={{ fontStyle: "italic" }}
-        >{`Did you know that ${minTurnsCount} turns are the minimum to win this game with no lucky guess?`}</div>
+        >{`Did you know that it takes at least ${minTurnsCount} turns to win this game with no lucky guess?`}</div>
         <StyledModalButton onClick={handleRestart}>Restart</StyledModalButton>
       </StyledModalContent>
     </ResponsiveContainer>
