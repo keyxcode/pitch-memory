@@ -1,11 +1,10 @@
 import styled from "styled-components";
+import StyledButton from "./StyledButton";
 
 interface ButtonGroupProps {
   handleRestart: () => void;
   handleChangeNumCells: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   numCells: number;
-  message: string;
-  funFact: string;
 }
 
 const StyledButtonGroup = styled.div`
@@ -20,21 +19,6 @@ const StyledButtonGroup = styled.div`
   padding: var(--s);
 `;
 
-const StyledButton = styled.button`
-  padding: var(--s);
-  background-color: var(--dark);
-  color: var(--lighter);
-  border-radius: var(--xs);
-  cursor: pointer;
-  border: none;
-  height: var(--xl);
-
-  &:active {
-    background-color: var(--darker);
-    transition-duration: 0.3s;
-  }
-`;
-
 const StyledSelect = styled.select`
   background-color: var(--dark);
   color: var(--lighter);
@@ -46,8 +30,6 @@ const ButtonGroup = ({
   handleRestart,
   handleChangeNumCells,
   numCells,
-  message,
-  funFact,
 }: ButtonGroupProps) => (
   <StyledButtonGroup>
     <StyledButton onClick={handleRestart}>Restart</StyledButton>
@@ -62,8 +44,7 @@ const ButtonGroup = ({
       <option value={25}>5 x 5</option>
       <option value={36}>6 x 6</option>
     </StyledSelect>
-    <div>{message}</div>
-    <div style={{ fontStyle: "italic" }}>{funFact}</div>
+    <div>find all the squares with the same pitch</div>
   </StyledButtonGroup>
 );
 

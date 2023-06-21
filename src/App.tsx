@@ -10,15 +10,15 @@ import { Cell } from "./types";
 import Header from "./components/Header";
 import createRandomCells from "./utils/randomCellsGenerator";
 import getLocalStorageNumCells from "./utils/localStorage";
+import Modal from "./components/Modal";
 
 const App = () => {
   const [numCells, setNumCells] = useState(getLocalStorageNumCells());
   const [turnsCount, setTurnsCount] = useState(0);
-  const [message, setMessage] = useState(
-    "find all the squares with the same pitch"
-  );
+  const [message, setMessage] = useState("");
   const [funFact, setFunFact] = useState("");
   const [gameOver, setGameOver] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const boardSize = useMemo(() => Math.sqrt(numCells), [numCells]);
   const boardMiddleId = useMemo(
@@ -36,6 +36,16 @@ const App = () => {
   useEffect(() => {
     window.localStorage.setItem("numCells", numCells.toString());
   }, [numCells]);
+
+  useEffect(() => {
+    if (gameOver) {
+      setTimeout(() => {
+        setModalOpen(true);
+      }, 3000);
+    } else {
+      setModalOpen(false);
+    }
+  }, [gameOver]);
 
   const handleSelectCell = (id: number): void => {
     if (cells[id].selected === true) return;
@@ -106,7 +116,7 @@ const App = () => {
 
   const init = (): void => {
     setGameOver(false);
-    setMessage("find all the squares with the same pitch");
+    setMessage("");
     setFunFact("");
     setTurnsCount(0);
   };
@@ -143,10 +153,22 @@ const App = () => {
     init();
   };
 
+  const handleCloseModal = (): void => {
+    setModalOpen(false);
+  };
+
   return (
     <>
       <GlobalStyles />
       <MainContainer>
+        {modalOpen && (
+          <Modal
+            message={message}
+            funFact={funFact}
+            handleRestart={handleRestart}
+            handleCloseModal={handleCloseModal}
+          />
+        )}
         <ResponsiveContainer>
           {gameOver && numCells === 36 && <Confetti />}
           <Header />
@@ -161,8 +183,6 @@ const App = () => {
             handleRestart={handleRestart}
             handleChangeNumCells={handleChangeNumCells}
             numCells={numCells}
-            message={message}
-            funFact={funFact}
           />
         </ResponsiveContainer>
         <Footer />
