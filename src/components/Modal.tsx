@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import StyledButton from "./StyledButton";
 import ResponsiveContainer from "./ResponsiveContainer";
 
 interface ModalProps {
-  message: string;
-  funFact: string;
+  turnsCount: number;
+  minTurnsCount: number;
   handleRestart: () => void;
   handleCloseModal: () => void;
 }
@@ -21,6 +21,17 @@ const StyledModal = styled.div`
   align-items: center;
 `;
 
+const dropDown = keyframes`
+    from {
+        transform: translate(0, -50px);
+        opacity: 0;
+    }
+    to {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+`;
+
 const StyledModalContent = styled.div`
   background-color: var(--lighter);
   border: var(--xs) solid var(--mid);
@@ -31,6 +42,7 @@ const StyledModalContent = styled.div`
   flex-direction: column;
   row-gap: var(--md);
   align-items: center;
+  animation: ${dropDown} 0.5s ease-out;
 `;
 
 const StyledModalButton = styled(StyledButton)`
@@ -38,16 +50,18 @@ const StyledModalButton = styled(StyledButton)`
 `;
 
 const Modal = ({
-  message,
-  funFact,
+  turnsCount,
+  minTurnsCount,
   handleRestart,
   handleCloseModal,
 }: ModalProps) => (
   <StyledModal onClick={handleCloseModal}>
     <ResponsiveContainer>
       <StyledModalContent>
-        <div>{message}</div>
-        <div style={{ fontStyle: "italic" }}>{funFact}</div>
+        <div>{`You win in ${turnsCount} turns! 🥳`}</div>
+        <div
+          style={{ fontStyle: "italic" }}
+        >{`Did you know that ${minTurnsCount} turns are the minimum to win this game with no lucky guess?`}</div>
         <StyledModalButton onClick={handleRestart}>Restart</StyledModalButton>
       </StyledModalContent>
     </ResponsiveContainer>

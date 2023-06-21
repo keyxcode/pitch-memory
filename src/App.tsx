@@ -15,8 +15,6 @@ import Modal from "./components/Modal";
 const App = () => {
   const [numCells, setNumCells] = useState(getLocalStorageNumCells());
   const [turnsCount, setTurnsCount] = useState(0);
-  const [message, setMessage] = useState("");
-  const [funFact, setFunFact] = useState("");
   const [gameOver, setGameOver] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -41,7 +39,7 @@ const App = () => {
     if (gameOver) {
       setTimeout(() => {
         setModalOpen(true);
-      }, 3000);
+      }, 1200);
     } else {
       setModalOpen(false);
     }
@@ -66,7 +64,7 @@ const App = () => {
 
       if (guessesAreCorrect(selectedCells)) {
         const cellsMarkedCorrect = markSelectedCellsCorrect(newCells);
-        checkGameOver(cellsMarkedCorrect, newTurnsCount);
+        checkGameOver(cellsMarkedCorrect);
       } else {
         setAllCellsUnselected();
       }
@@ -104,20 +102,14 @@ const App = () => {
     return cells.every((cell) => cell.guessed === true);
   };
 
-  const checkGameOver = (cells: Cell[], turnsCount: number): void => {
+  const checkGameOver = (cells: Cell[]): void => {
     if (gameIsOver(cells)) {
       setGameOver(true);
-      setMessage(`You win in ${turnsCount} turns! 🥳`);
-      setFunFact(
-        `Did you know that ${minTurnsCount} turns are the minimum to win this game with no lucky guess?`
-      );
     }
   };
 
   const init = (): void => {
     setGameOver(false);
-    setMessage("");
-    setFunFact("");
     setTurnsCount(0);
   };
 
@@ -163,8 +155,8 @@ const App = () => {
       <MainContainer>
         {modalOpen && (
           <Modal
-            message={message}
-            funFact={funFact}
+            turnsCount={turnsCount}
+            minTurnsCount={minTurnsCount}
             handleRestart={handleRestart}
             handleCloseModal={handleCloseModal}
           />
