@@ -15,6 +15,7 @@ import Modal from "./components/Modal";
 const App = () => {
   const [numCells, setNumCells] = useState(getLocalStorageNumCells());
   const [turnsCount, setTurnsCount] = useState(0);
+  const [luckyCount, setLuckyCount] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [modalOpen, setModalOpen] = useState(true);
 
@@ -45,12 +46,17 @@ const App = () => {
     }
   }, [gameOver]);
 
+  const [selectedId, setSelectedId] = useState([]);
+
   const handleSelectCell = (id: number): void => {
     if (cells[id].selected === true) return;
 
+    // set selected cells and adjust selectCount
+    const newSelectCount = cells[id].selectCount + 1;
     const newCells = cells.map((cell, i) =>
-      i === id ? { ...cell, selected: true } : cell
+      i === id ? { ...cell, selected: true, selectCount: newSelectCount } : cell
     );
+    console.log(newCells);
     setCells(newCells);
 
     const selectedCells = newCells.filter((cell) => cell.selected === true);
@@ -63,6 +69,7 @@ const App = () => {
       setTurnsCount(newTurnsCount);
 
       if (guessesAreCorrect(selectedCells)) {
+        checkLucky(selectedCells);
         const cellsMarkedCorrect = markSelectedCellsCorrect(newCells);
         checkGameOver(cellsMarkedCorrect);
       } else {
@@ -71,9 +78,21 @@ const App = () => {
     }
   };
 
+  const checkLucky = (selectedCells: Cell[]): void => {
+    console.log(selectedCells);
+    if (
+      selectedCells[0].selectCount === 1 &&
+      selectedCells[1].selectCount === 1
+    ) {
+      console.log("lucky!");
+      setLuckyCount((prev) => prev + 1);
+    }
+  };
+
   const guessesAreCorrect = (selectedCells: Cell[]): boolean => {
     // console.log(selectedCells);
     if (selectedCells[0].sound === selectedCells[1].sound) return true;
+
     return false;
   };
 
@@ -154,6 +173,7 @@ const App = () => {
         {modalOpen && (
           <Modal
             turnsCount={turnsCount}
+            luckyCount={luckyCount}
             minTurnsCount={minTurnsCount}
             handleRestart={handleRestart}
             handleCloseModal={handleCloseModal}

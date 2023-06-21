@@ -4,6 +4,7 @@ import ResponsiveContainer from "./ResponsiveContainer";
 
 interface ModalProps {
   turnsCount: number;
+  luckyCount: number;
   minTurnsCount: number;
   handleRestart: () => void;
   handleCloseModal: () => void;
@@ -72,6 +73,7 @@ const StyledCloseButton = styled(StyledButton)`
 
 const Modal = ({
   turnsCount,
+  luckyCount,
   minTurnsCount,
   handleRestart,
   handleCloseModal,
@@ -80,7 +82,7 @@ const Modal = ({
     <ResponsiveContainer>
       <StyledModalContent>
         <StyledCloseButton onClick={handleCloseModal}>X</StyledCloseButton>
-        <div>{`You won in ${turnsCount} turns! 🥳`}</div>
+        <div>{`You won in ${turnsCount} turns (with ${luckyCount} lucky guesses)! 🥳`}</div>
         <div
           style={{ fontStyle: "italic" }}
         >{`Did you know that it takes at least ${minTurnsCount} turns to win this game with no lucky guess?`}</div>

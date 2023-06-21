@@ -7,4 +7,5 @@ export interface Cell {
   sound: Sound;
   selected: boolean;
   guessed: boolean;
+  selectCount: number;
 }

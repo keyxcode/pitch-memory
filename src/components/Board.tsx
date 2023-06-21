@@ -42,7 +42,7 @@ const Board = ({
                 guessed={cells[i].guessed}
               />
             ) : i === boardMiddleId ? (
-              <MiddleCell />
+              <MiddleCell key={i} />
             ) : (
               <Cell
                 key={i}

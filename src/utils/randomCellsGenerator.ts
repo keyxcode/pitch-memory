@@ -7,13 +7,10 @@ const selectRandomElInArray = (arr: any[]) => {
 
 const getRandomElements = (arr: any[], n: number) => {
   let arrClone = arr.slice();
-  console.log(soundsData.length);
   const randomElements = [];
 
   while (randomElements.length < n) {
-    console.log("generating...");
     const el = selectRandomElInArray(arrClone);
-    console.log("el", el);
     arrClone = arrClone.filter((e) => e != el);
     randomElements.push(el);
   }
@@ -49,7 +46,7 @@ const createRandomCells = (numCells: number): Cell[] => {
   const shuffledRandomSounds = shuffleArray(fullRandomSounds);
 
   const randomCells = Array(numCells)
-    .fill({ selected: false, guessed: false })
+    .fill({ selected: false, guessed: false, selectCount: 0 })
     .map((cell, id) => ({
       ...cell,
       sound: shuffledRandomSounds[id],
