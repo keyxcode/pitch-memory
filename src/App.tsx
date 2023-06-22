@@ -46,40 +46,42 @@ const App = () => {
     }
   }, [gameOver]);
 
-  const [selectedId, setSelectedId] = useState([]);
-
   const handleSelectCell = (id: number): void => {
+    // console.log(id, cells[id].selectCount, cells[id]);
     if (cells[id].selected === true) return;
 
-    // set selected cells and adjust selectCount
+    // Update selected and selectCount
     const newSelectCount = cells[id].selectCount + 1;
-    const newCells = cells.map((cell, i) =>
-      i === id ? { ...cell, selected: true, selectCount: newSelectCount } : cell
-    );
-    console.log(newCells);
+    const newCells = cells.map((cell, i) => {
+      return i === id
+        ? { ...cell, selected: true, selectCount: newSelectCount }
+        : cell;
+    });
     setCells(newCells);
+    // console.log(newCells);
 
+    // Find currently selected cells
     const selectedCells = newCells.filter((cell) => cell.selected === true);
     const numSelectedCells = selectedCells.length;
 
     if (numSelectedCells === 1) return;
-
     if (numSelectedCells === 2) {
       const newTurnsCount = turnsCount + 1;
       setTurnsCount(newTurnsCount);
 
       if (guessesAreCorrect(selectedCells)) {
         checkLucky(selectedCells);
-        const cellsMarkedCorrect = markSelectedCellsCorrect(newCells);
-        checkGameOver(cellsMarkedCorrect);
+        const guessedCells = markGuessedCells(newCells);
+        checkGameOver(guessedCells);
       } else {
-        setAllCellsUnselected();
+        setAllCellsUnselected(newCells);
       }
     }
   };
 
   const checkLucky = (selectedCells: Cell[]): void => {
-    console.log(selectedCells);
+    console.log(cells);
+    console.log(`lucky count ${luckyCount}`);
     if (
       selectedCells[0].selectCount === 1 &&
       selectedCells[1].selectCount === 1
@@ -96,7 +98,7 @@ const App = () => {
     return false;
   };
 
-  const markSelectedCellsCorrect = (cells: Cell[]): Cell[] => {
+  const markGuessedCells = (cells: Cell[]): Cell[] => {
     const newCells = cells.map((cell) =>
       cell.selected === true
         ? { ...cell, guessed: true, selected: false }
@@ -110,10 +112,14 @@ const App = () => {
     return newCells;
   };
 
-  const setAllCellsUnselected = (): void => {
-    const newCells = cells.map((cell) => ({ ...cell, selected: false }));
+  const setAllCellsUnselected = (newCells: Cell[]): void => {
+    const newCellsUnselected = newCells.map((cell) => ({
+      ...cell,
+      selected: false,
+    }));
     setTimeout(() => {
-      setCells(newCells);
+      // console.log("set unselected");
+      setCells(newCellsUnselected);
     }, 500);
   };
 
@@ -128,6 +134,7 @@ const App = () => {
   const init = (): void => {
     setGameOver(false);
     setTurnsCount(0);
+    setLuckyCount(0);
   };
 
   const handleRestart = (): void => {

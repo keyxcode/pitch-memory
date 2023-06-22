@@ -82,7 +82,9 @@ const Modal = ({
     <ResponsiveContainer>
       <StyledModalContent>
         <StyledCloseButton onClick={handleCloseModal}>X</StyledCloseButton>
-        <div>{`You won in ${turnsCount} turns (with ${luckyCount} lucky guesses)! 🥳`}</div>
+        <div>{`You won in ${turnsCount} turns (with ${luckyCount} lucky ${
+          luckyCount <= 1 ? `guess` : `guesses`
+        })! 🥳`}</div>
         <div
           style={{ fontStyle: "italic" }}
         >{`Did you know that it takes at least ${minTurnsCount} turns to win this game with no lucky guess?`}</div>
