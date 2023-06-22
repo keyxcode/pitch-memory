@@ -46,7 +46,7 @@ const createRandomCells = (numCells: number): Cell[] => {
   const shuffledRandomSounds = shuffleArray(fullRandomSounds);
 
   const randomCells = Array(numCells)
-    .fill({ selected: false, guessed: false, selectCount: 0 })
+    .fill({ selected: false, guessed: false, hadBeenSelected: false })
     .map((cell, id) => ({
       ...cell,
       sound: shuffledRandomSounds[id],

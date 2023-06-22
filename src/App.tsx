@@ -47,19 +47,16 @@ const App = () => {
   }, [gameOver]);
 
   const handleSelectCell = (id: number): void => {
-    // console.log(id, cells[id].selectCount, cells[id]);
     const cellJustSelected = cells[id];
     if (cellJustSelected.selected === true) return;
 
-    // Update selected and selectCount
-    const newSelectCount = cellJustSelected.selectCount + 1;
+    // Update selected and hadBeenSelected
     const newCells = cells.map((cell, i) => {
       return i === id
-        ? { ...cell, selected: true, selectCount: newSelectCount }
+        ? { ...cell, selected: true, hadBeenSelected: true }
         : cell;
     });
     setCells(newCells);
-    // console.log(newCells);
 
     // Find currently selected cells
     const selectedCells = newCells.filter((cell) => cell.selected === true);
@@ -81,23 +78,16 @@ const App = () => {
   };
 
   const checkLucky = (cellJustSelected: Cell, currentCells: Cell[]): void => {
-    // console.log(cells);
-    // console.log(`lucky count ${luckyCount}`);
-
     const cellsNotYetOpened = currentCells.filter(
-      (cell) => cell.selectCount === 0
+      (cell) => !cell.hadBeenSelected
     );
-    // console.log(cellJustSelected);
-    // console.log(cellsNotYetOpened);
 
-    if (cellJustSelected.selectCount === 0 && cellsNotYetOpened.length >= 1) {
-      console.log("lucky!");
+    if (!cellJustSelected.hadBeenSelected && cellsNotYetOpened.length >= 1) {
       setLuckyCount((prev) => prev + 1);
     }
   };
 
   const selectedCellsAreCorrect = (selectedCells: Cell[]): boolean => {
-    // console.log(selectedCells);
     if (selectedCells[0].sound === selectedCells[1].sound) return true;
 
     return false;
@@ -123,7 +113,6 @@ const App = () => {
       selected: false,
     }));
     setTimeout(() => {
-      // console.log("set unselected");
       setCells(newCellsUnselected);
     }, 500);
   };
@@ -162,8 +151,6 @@ const App = () => {
   };
 
   const handleChangeNumCells = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // console.log("changed board size to", e.target.value);
-
     const newNumCells = parseInt(e.target.value);
     const newNumSoundCells =
       newNumCells % 2 === 0 ? newNumCells : newNumCells - 1;
