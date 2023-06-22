@@ -3,9 +3,16 @@ export interface Sound {
   name: string;
 }
 
-export interface Cell {
+export interface MiddleCell {
+  isMiddleCell: boolean;
+  id: string;
+}
+
+export interface SoundCell extends MiddleCell {
   sound: Sound;
   selected: boolean;
   guessed: boolean;
-  hadBeenSelected: boolean;
+  hadBeenSelected?: boolean;
 }
+
+export type Cell = MiddleCell | SoundCell;

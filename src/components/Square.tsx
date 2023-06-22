@@ -2,22 +2,22 @@ import styled from "styled-components";
 import useSound from "use-sound";
 import { Sound } from "../types";
 
-interface StyledCellProps {
+interface StyledSquareProps {
   onClick: () => void;
   selected: boolean;
   sound: Sound;
   guessed: boolean;
 }
 
-interface CellProps {
-  handleSelect: (id: number) => void;
-  cellId: number;
+interface SoundSquareProps {
+  id: string;
+  handleSelect: (id: string) => void;
   selected: boolean;
   sound: Sound;
   guessed: boolean;
 }
 
-const StyledCell = styled.div<StyledCellProps>`
+const StyledSquare = styled.div<StyledSquareProps>`
   aspect-ratio: 1/1;
   border: ${(p) =>
     p.guessed ? `4px solid var(--dark)` : `4px solid var(--mid)`};
@@ -37,20 +37,20 @@ const StyledCell = styled.div<StyledCellProps>`
   }
 `;
 
-export const MiddleCell = styled(StyledCell)<any>`
+export const MiddleSquare = styled(StyledSquare)<any>`
   border: 0;
   cursor: default;
   background-color: var(--lighter);
 `;
 
-const Cell = ({
-  cellId,
+const SoundSquare = ({
+  id: cellId,
   handleSelect,
   selected,
   sound,
   guessed,
-}: CellProps) => {
-  const [play] = useSound(sound.path, { volume: 2 });
+}: SoundSquareProps) => {
+  const [play] = useSound(sound?.path, { volume: 2 });
 
   const handleClick = (): void => {
     if (guessed) return;
@@ -61,7 +61,7 @@ const Cell = ({
   // console.log("rendering cell");
 
   return (
-    <StyledCell
+    <StyledSquare
       onClick={handleClick}
       guessed={guessed}
       selected={selected}
@@ -75,11 +75,11 @@ const Cell = ({
           height: "100%",
         }}
       >
-        {guessed && sound.name}
+        {guessed && sound?.name}
         {/* {sound.name} */}
       </div>
-    </StyledCell>
+    </StyledSquare>
   );
 };
 
-export default Cell;
+export default SoundSquare;

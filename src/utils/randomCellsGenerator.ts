@@ -1,5 +1,6 @@
 import soundsData from "../assets/sounds/soundsData";
 import { Cell } from "../types";
+import { v4 as uuid } from "uuid";
 
 const selectRandomElInArray = (arr: any[]) => {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -38,23 +39,46 @@ const shuffleArray = (arr: any[]) => {
   return arr;
 };
 
+const insertElMiddleArray = (arr: any[], el: any) => {
+  const idToInsert = Math.floor(arr.length / 2);
+
+  const arrCopy = arr.slice();
+  arrCopy.splice(idToInsert, 0, el);
+
+  return arrCopy;
+};
+
 const createRandomCells = (numCells: number): Cell[] => {
-  // This function takes only even numbers
-  // Assure there's a pair to every sound
-  const halfRandomSounds = getRandomElements(soundsData, numCells / 2);
+  const isEvenBoard = numCells % 2 === 0;
+
+  const numSoundCells = isEvenBoard ? numCells : numCells - 1;
+  const halfRandomSounds = getRandomElements(soundsData, numSoundCells / 2);
   const fullRandomSounds = [...halfRandomSounds, ...halfRandomSounds];
   const shuffledRandomSounds = shuffleArray(fullRandomSounds);
 
-  const randomCells = Array(numCells)
-    .fill({ selected: false, guessed: false, hadBeenSelected: false })
+  const randomSoundCells = Array(numSoundCells)
+    .fill({
+      selected: false,
+      guessed: false,
+      hadBeenSelected: false,
+      isMiddleCell: false,
+    })
     .map((cell, id) => ({
       ...cell,
+      id: uuid(),
       sound: shuffledRandomSounds[id],
     }));
 
-  // console.log("created new cells", randomCells);
+  const middleCell = {
+    id: uuid(),
+    isMiddleCell: true,
+  };
 
-  return randomCells;
+  const fullCells = isEvenBoard
+    ? randomSoundCells
+    : insertElMiddleArray(randomSoundCells, middleCell);
+
+  return fullCells;
 };
 
 export default createRandomCells;

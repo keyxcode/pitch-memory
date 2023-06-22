@@ -5,7 +5,7 @@ import ResponsiveContainer from "./ResponsiveContainer";
 interface ModalProps {
   turnsCount: number;
   luckyCount: number;
-  minTurnsCount: number;
+  numCells: number;
   handleRestart: () => void;
   handleCloseModal: () => void;
 }
@@ -74,24 +74,29 @@ const StyledCloseButton = styled(StyledButton)`
 const Modal = ({
   turnsCount,
   luckyCount,
-  minTurnsCount,
+  numCells,
   handleRestart,
   handleCloseModal,
-}: ModalProps) => (
-  <StyledModal>
-    <ResponsiveContainer>
-      <StyledModalContent>
-        <StyledCloseButton onClick={handleCloseModal}>X</StyledCloseButton>
-        <div>{`You won in ${turnsCount} turns (with ${luckyCount} lucky ${
-          luckyCount <= 1 ? `guess` : `guesses`
-        })! 🥳`}</div>
-        <div
-          style={{ fontStyle: "italic" }}
-        >{`Did you know that it takes at least ${minTurnsCount} turns to win this game with no lucky guess?`}</div>
-        <StyledModalButton onClick={handleRestart}>Restart</StyledModalButton>
-      </StyledModalContent>
-    </ResponsiveContainer>
-  </StyledModal>
-);
+}: ModalProps) => {
+  const numSoundCells = numCells % 2 === 0 ? numCells : numCells - 1;
+  const minTurnsCount = (numSoundCells * 3) / 4;
+
+  return (
+    <StyledModal>
+      <ResponsiveContainer>
+        <StyledModalContent>
+          <StyledCloseButton onClick={handleCloseModal}>X</StyledCloseButton>
+          <div>{`You won in ${turnsCount} turns (with ${luckyCount} lucky ${
+            luckyCount <= 1 ? `guess` : `guesses`
+          })! 🥳`}</div>
+          <div
+            style={{ fontStyle: "italic" }}
+          >{`Did you know that it takes at least ${minTurnsCount} turns to win this game with no lucky guess?`}</div>
+          <StyledModalButton onClick={handleRestart}>Restart</StyledModalButton>
+        </StyledModalContent>
+      </ResponsiveContainer>
+    </StyledModal>
+  );
+};
 
 export default Modal;
