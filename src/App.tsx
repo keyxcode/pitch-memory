@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import GlobalStyles from "./GlobalStyles";
 import MainContainer from "./components/MainContainer";
 import ResponsiveContainer from "./components/ResponsiveContainer";
@@ -29,8 +29,9 @@ const App = () => {
     [numCells]
   );
   const minTurnsCount = useMemo(() => (numSoundCells * 3) / 4, [numSoundCells]);
-
   const [cells, setCells] = useState(createRandomCells(numSoundCells));
+
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     window.localStorage.setItem("numCells", numCells.toString());
@@ -45,37 +46,6 @@ const App = () => {
       setModalOpen(false);
     }
   }, [gameOver]);
-
-  const handleSelectCell = (id: number): void => {
-    const cellJustSelected = cells[id];
-    if (cellJustSelected.selected === true) return;
-
-    // Update selected and hadBeenSelected
-    const newCells = cells.map((cell, i) => {
-      return i === id
-        ? { ...cell, selected: true, hadBeenSelected: true }
-        : cell;
-    });
-    setCells(newCells);
-
-    // Find currently selected cells
-    const selectedCells = newCells.filter((cell) => cell.selected === true);
-    const numSelectedCells = selectedCells.length;
-
-    if (numSelectedCells === 1) return;
-    if (numSelectedCells === 2) {
-      const newTurnsCount = turnsCount + 1;
-      setTurnsCount(newTurnsCount);
-
-      if (selectedCellsAreCorrect(selectedCells)) {
-        checkLucky(cellJustSelected, newCells);
-        const guessedCells = markGuessedCells(newCells);
-        checkGameOver(guessedCells);
-      } else {
-        setAllCellsUnselected(newCells);
-      }
-    }
-  };
 
   const checkLucky = (cellJustSelected: Cell, currentCells: Cell[]): void => {
     const cellsNotYetOpened = currentCells.filter(
@@ -125,21 +95,44 @@ const App = () => {
     }
   };
 
-  const init = (): void => {
-    setGameOver(false);
-    setTurnsCount(0);
-    setLuckyCount(0);
+  const handleSelectCell = (id: number): void => {
+    const cellJustSelected = cells[id];
+    if (cellJustSelected.selected === true) return;
+
+    // Update selected and hadBeenSelected
+    const newCells = cells.map((cell, i) => {
+      return i === id
+        ? { ...cell, selected: true, hadBeenSelected: true }
+        : cell;
+    });
+    setCells(newCells);
+
+    // Find currently selected cells
+    const selectedCells = newCells.filter((cell) => cell.selected === true);
+    const numSelectedCells = selectedCells.length;
+
+    if (numSelectedCells === 1) return;
+    if (numSelectedCells === 2) {
+      const newTurnsCount = turnsCount + 1;
+      setTurnsCount(newTurnsCount);
+
+      if (selectedCellsAreCorrect(selectedCells)) {
+        checkLucky(cellJustSelected, newCells);
+        const guessedCells = markGuessedCells(newCells);
+        checkGameOver(guessedCells);
+      } else {
+        setAllCellsUnselected(newCells);
+      }
+    }
   };
 
-  const handleRestart = (): void => {
+  const flipAndShuffleBoard = (): void => {
     const randomCells = createRandomCells(numSoundCells);
     const newCellsAllSelected = randomCells.map((cell) => ({
       ...cell,
       selected: true,
     }));
     setCells(newCellsAllSelected);
-
-    init();
 
     setTimeout(() => {
       const newCells = newCellsAllSelected.map((cell) => ({
@@ -150,14 +143,28 @@ const App = () => {
     }, 500);
   };
 
+  useMemo(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    flipAndShuffleBoard();
+  }, [numSoundCells]);
+
+  const init = (): void => {
+    setGameOver(false);
+    setTurnsCount(0);
+    setLuckyCount(0);
+  };
+
+  const handleRestart = (): void => {
+    init();
+    flipAndShuffleBoard();
+  };
+
   const handleChangeNumCells = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newNumCells = parseInt(e.target.value);
-    const newNumSoundCells =
-      newNumCells % 2 === 0 ? newNumCells : newNumCells - 1;
-
     setNumCells(newNumCells);
-    setCells(createRandomCells(newNumSoundCells));
-
     init();
   };
 
@@ -181,13 +188,15 @@ const App = () => {
         <ResponsiveContainer>
           {gameOver && numCells === 36 && <Confetti />}
           <Header />
-          <Board
-            boardMiddleId={boardMiddleId}
-            boardSize={boardSize}
-            numCells={numCells}
-            handleSelectCell={handleSelectCell}
-            cells={cells}
-          />
+          {cells && (
+            <Board
+              boardMiddleId={boardMiddleId}
+              boardSize={boardSize}
+              numCells={numCells}
+              handleSelectCell={handleSelectCell}
+              cells={cells}
+            />
+          )}
           <ButtonGroup
             handleRestart={handleRestart}
             handleChangeNumCells={handleChangeNumCells}

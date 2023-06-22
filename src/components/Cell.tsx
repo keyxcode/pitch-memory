@@ -75,8 +75,8 @@ const Cell = ({
           height: "100%",
         }}
       >
-        {/* {guessed && sound.name} */}
-        {sound.name}
+        {guessed && sound.name}
+        {/* {sound.name} */}
       </div>
     </StyledCell>
   );
