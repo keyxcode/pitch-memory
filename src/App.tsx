@@ -48,10 +48,11 @@ const App = () => {
 
   const handleSelectCell = (id: number): void => {
     // console.log(id, cells[id].selectCount, cells[id]);
-    if (cells[id].selected === true) return;
+    const cellJustSelected = cells[id];
+    if (cellJustSelected.selected === true) return;
 
     // Update selected and selectCount
-    const newSelectCount = cells[id].selectCount + 1;
+    const newSelectCount = cellJustSelected.selectCount + 1;
     const newCells = cells.map((cell, i) => {
       return i === id
         ? { ...cell, selected: true, selectCount: newSelectCount }
@@ -69,8 +70,8 @@ const App = () => {
       const newTurnsCount = turnsCount + 1;
       setTurnsCount(newTurnsCount);
 
-      if (guessesAreCorrect(selectedCells)) {
-        checkLucky(selectedCells);
+      if (selectedCellsAreCorrect(selectedCells)) {
+        checkLucky(cellJustSelected, newCells);
         const guessedCells = markGuessedCells(newCells);
         checkGameOver(guessedCells);
       } else {
@@ -79,19 +80,23 @@ const App = () => {
     }
   };
 
-  const checkLucky = (selectedCells: Cell[]): void => {
-    console.log(cells);
-    console.log(`lucky count ${luckyCount}`);
-    if (
-      selectedCells[0].selectCount === 1 &&
-      selectedCells[1].selectCount === 1
-    ) {
+  const checkLucky = (cellJustSelected: Cell, currentCells: Cell[]): void => {
+    // console.log(cells);
+    // console.log(`lucky count ${luckyCount}`);
+
+    const cellsNotYetOpened = currentCells.filter(
+      (cell) => cell.selectCount === 0
+    );
+    // console.log(cellJustSelected);
+    // console.log(cellsNotYetOpened);
+
+    if (cellJustSelected.selectCount === 0 && cellsNotYetOpened.length >= 1) {
       console.log("lucky!");
       setLuckyCount((prev) => prev + 1);
     }
   };
 
-  const guessesAreCorrect = (selectedCells: Cell[]): boolean => {
+  const selectedCellsAreCorrect = (selectedCells: Cell[]): boolean => {
     // console.log(selectedCells);
     if (selectedCells[0].sound === selectedCells[1].sound) return true;
 
