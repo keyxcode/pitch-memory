@@ -1,17 +1,10 @@
-import { describe, test } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe } from "vitest";
+import { render } from "@testing-library/react";
 import App from "./App";
 
-describe("Footer test", () => {
-  beforeEach(() => {
-    render(<App></App>);
-  });
-
-  test("should show app name", () => {
-    expect(screen.getByText(/pitch memory/i)).toBeDefined();
-  });
-
-  test("should show name in footer", () => {
-    expect(screen.getByText(/keyxcode/i)).toBeDefined();
+describe("App component", () => {
+  it("renders correctly", () => {
+    const result = render(<App></App>);
+    expect(result).toMatchSnapshot();
   });
 });
