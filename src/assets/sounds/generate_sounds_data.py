@@ -19,6 +19,9 @@ with open("soundsData.ts", "w") as f:
         f"{{ path: {note_name}, name: '{note_name}' }}," for note_name in note_names
     ]
     for note_object in note_objects:
+        # ignore sounds in the 6th register (too high!)
+        if "6" in note_object:
+            continue
         f.write(note_object)
     f.write("];")
 
