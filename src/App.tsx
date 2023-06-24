@@ -9,12 +9,12 @@ import Confetti from "react-confetti";
 import { Cell, SoundCell } from "./types";
 import Header from "./components/Header";
 import createRandomCells from "./utils/randomCellsGenerator";
-import getLocalStorageNumCells from "./utils/localStorage";
 import Modal from "./components/Modal";
 import { isSoundCell } from "./utils/typeGuards";
+import useLocalStorageNumber from "./hooks/useLocalStorageNumber";
 
 const App = () => {
-  const [numCells, setNumCells] = useState(getLocalStorageNumCells());
+  const [numCells, setNumCells] = useLocalStorageNumber("numCells", 9);
   const [cells, setCells] = useState(() => createRandomCells(numCells));
   const [turnsCount, setTurnsCount] = useState(0);
   const [luckyCount, setLuckyCount] = useState(0);
@@ -24,7 +24,7 @@ const App = () => {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    window.localStorage.setItem("numCells", numCells.toString());
+    setNumCells(numCells);
   }, [numCells]);
 
   useEffect(() => {
