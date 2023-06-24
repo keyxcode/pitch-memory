@@ -50,7 +50,7 @@ const SoundSquare = ({
   sound,
   guessed,
 }: SoundSquareProps) => {
-  const [play] = useSound(sound?.path, { volume: 2 });
+  const [play] = useSound(sound?.path);
 
   const handleClick = (): void => {
     if (guessed) return;
